@@ -78,11 +78,17 @@ class ContinentCards extends React.Component {
           <Typography gutterBottom variant="h6" component="h2">
             {labelContinents[i]}
           </Typography>
-          <Typography gutterBottom variant="h5" component="h2">
+          <Typography gutterBottom variant="h6" component="h2" style = {{marginBottom: 0}}>
             {casesContinents[i].toLocaleString()} cases
           </Typography>
-          <Typography variant="body1" component="p" style={{color: "red"}}>
+          <Typography variant="body1" component="p" color = "textSecondary" style={{marginTop: 0, fontSize: "0.8rem", fontStyle: "italic"}}>
+          {casesPerCapContinents[i].toLocaleString()} cases per million
+          </Typography>
+          <Typography variant="h6" component="h2" style={{color: "red", marginBottom: 0}}>
           {deathsContinents[i].toLocaleString()} deaths
+          </Typography>
+          <Typography variant="body1" component="p" color = "textSecondary" style={{marginTop: 0, fontSize: "0.8rem", fontStyle: "italic"}}>
+          {deathsPerCapContinents[i].toLocaleString()} deaths per million
           </Typography>
           <Typography variant="body1" color="textSecondary" component="p" style={{marginTop: 5}}>
             {(fatalityRateContinents[i].toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}))} Fatality Rate

@@ -90,7 +90,7 @@ export default class ContinentCharts extends React.Component {
         />
 
         </div>
-        <div className="col-xs-12 col-md-6"> 
+        {/* <div className="col-xs-12 col-md-6"> 
         <Pie
           data={{
             labels: labelContinents,
@@ -146,10 +146,10 @@ export default class ContinentCharts extends React.Component {
            }}
         />
 
-        </div>
-        </div>
+        </div> */}
+        {/* </div> */}
         
-        <div className = "row">
+        {/* <div className = "row"> */}
 
         <div className="col-xs-12 col-md-6">
           <Pie
@@ -208,7 +208,7 @@ export default class ContinentCharts extends React.Component {
           />
         </div>
 
-        <div className="col-xs-12 col-md-6">
+        {/* <div className="col-xs-12 col-md-6">
           <Pie
             data={{
               labels: labelContinents,
@@ -263,9 +263,9 @@ export default class ContinentCharts extends React.Component {
             }
              }}
           />
-        </div>
+        </div> */}
       </div>
-
+{/* 
       <div className="row">
 
         <div className="col-xs-12 col-md-6"> 
@@ -325,7 +325,7 @@ export default class ContinentCharts extends React.Component {
         />
 
         </div>
-        </div>
+        </div> */}
         <hr/>
       </div>
     );

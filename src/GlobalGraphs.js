@@ -14,6 +14,7 @@ import ContinentCharts from "./ContinentCharts";
 import ContinentCards from "./ContinentCards";
 import axios from 'axios';
 import GlobalTable from "./GlobalTable";
+import TopCountryCard from "./TopCountryCard";
 
 class GlobalGraphs extends React.Component {
   constructor(props) {
@@ -49,9 +50,7 @@ class GlobalGraphs extends React.Component {
         casesContinents: req4.data,
         casesCountries: req5.data
       });
-      this.worldDeathChart();
-      this.worldConfirmedChart(); 
-      this.worldDeathLogChart();
+      this.worldConfirmedChart();
       this.worldConfirmedLogChart();
     }));
   }
@@ -59,6 +58,8 @@ class GlobalGraphs extends React.Component {
   worldConfirmedChart() {
     var date = Object.keys(this.state.historyGlobal.cases);
     var data1 = Object.values(this.state.historyGlobal.cases);
+    var data2 = Object.values(this.state.historyGlobal.deaths);
+    var data3 = Object.values(this.state.historyGlobal.recovered);
     var config = {
       type: "line",
       data: {
@@ -71,11 +72,25 @@ class GlobalGraphs extends React.Component {
             data: data1,
             fill: false,
           },
+          {
+            label: "Deaths",
+            backgroundColor: "#B21F00",
+            borderColor: "#B21F00",
+            data: data2,
+            fill: false,
+          },
+          {
+            label: "Recovered",
+            backgroundColor: "#2FDE00",
+            borderColor: "#2FDE00",
+            data: data3,
+            fill: false,
+          },
         ],
       },
       options: {
         legend: {
-          display: false,
+          display: true,
           position: "bottom",
         },
         responsive: true,
@@ -160,6 +175,8 @@ class GlobalGraphs extends React.Component {
   worldConfirmedLogChart() {
     var date = Object.keys(this.state.historyGlobal.cases);
     var data1 = Object.values(this.state.historyGlobal.cases);
+    var data2 = Object.values(this.state.historyGlobal.deaths);
+    var data3 = Object.values(this.state.historyGlobal.recovered);
     var config = {
       type: "line",
       data: {
@@ -171,12 +188,26 @@ class GlobalGraphs extends React.Component {
             borderColor: "#00A6B4",
             data: data1,
             fill: false,
+          },          
+          {
+            label: "Deaths",
+            backgroundColor: "#B21F00",
+            borderColor: "#B21F00",
+            data: data2,
+            fill: false,
+          },
+          {
+            label: "Recovered",
+            backgroundColor: "#2FDE00",
+            borderColor: "#2FDE00",
+            data: data3,
+            fill: false,
           },
         ],
       },
       options: {
         legend: {
-          display: false,
+          display: true,
           position: "bottom",
         },
         responsive: true,
@@ -458,30 +489,24 @@ class GlobalGraphs extends React.Component {
               <hr/>
         <div className="row">
           <div className="col-xs-10 offset-xs-1 col-lg-6">
-            <Card style = {{marginBottom: "10px"}}><CardActionArea><CardContent><canvas id="canvasConfirmed"></canvas></CardContent></CardActionArea></Card>
+            <Card style = {{marginBottom: "10px"}}><CardContent><canvas id="canvasConfirmed"></canvas></CardContent></Card>
           </div>
           <div className="col-xs-10 offset-xs-1 col-lg-6">
-          <Card style = {{marginBottom: "10px"}}><CardActionArea><CardContent><canvas id="canvasConfirmedLog"></canvas></CardContent></CardActionArea></Card>
+          <Card style = {{marginBottom: "10px"}}><CardContent><canvas id="canvasConfirmedLog"></canvas></CardContent></Card>
           </div>
           </div>
-          <div className = "row">
-          <div className="col-xs-10 offset-xs-1 col-lg-6">
-          <Card style = {{marginBottom: "10px"}}><CardActionArea><CardContent><canvas id="canvasDeaths"></canvas></CardContent></CardActionArea></Card>
-          </div>
-          <div className="col-xs-10 offset-xs-1 col-lg-6">
-          <Card style = {{marginBottom: "10px"}}><CardActionArea><CardContent><canvas id="canvasDeathsLog"></canvas></CardContent></CardActionArea></Card>
-          </div>
-        </div>
         <hr/>
         <ContinentCards casesContinents = {this.state.casesContinents} />
         <ContinentCharts casesContinents = {this.state.casesContinents} />
-        <GlobalTable casesCountries = {this.state.casesCountries}/>
+        <TopCountryCard casesCountries = {this.state.casesCountries} cases = {this.state.cases} />
+        <GlobalTable casesCountries = {this.state.casesCountries} />
         <div className = "row">
       <div className = "col-12 text-center">
         <p style = {{textAlign:"center", fontSize: "1rem"}}>Last Updated: {(new Date(this.state.cases["updated"])).toString()}</p>
       </div>
-      <hr/>
+      
       <div className = "col-12 text-center">
+      <hr/>
       <p id = "olivera" style = {{textAlign:"center", fontSize: "1rem"}}>developed by <a href = "https://www.olivera.tech">olivera.tech</a></p>
 
       </div>
