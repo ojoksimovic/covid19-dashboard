@@ -6,11 +6,19 @@ import GlobalGraphs from './GlobalGraphs'
 import reportWebVitals from './reportWebVitals';
 import CanadaGraphs from './CanadaGraphs';
 import MediaCard from './GlobalCards';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
+        <Router>
     <App />
-    <GlobalGraphs />
+      </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

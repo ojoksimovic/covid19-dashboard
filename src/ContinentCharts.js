@@ -4,6 +4,8 @@ import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
 import "./utils";
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import { Pie, Doughnut } from 'react-chartjs-2';
 
 export default class ContinentCharts extends React.Component {
@@ -32,8 +34,8 @@ export default class ContinentCharts extends React.Component {
       <div>
 
       <div className="row">
-
         <div className="col-xs-12 col-md-6"> 
+        <Card style = {{marginBottom: "10px"}}><CardContent>
         <Pie
           data={{
             labels: labelContinents,
@@ -88,8 +90,9 @@ export default class ContinentCharts extends React.Component {
           }
            }}
         />
-
+        </CardContent></Card>
         </div>
+
         {/* <div className="col-xs-12 col-md-6"> 
         <Pie
           data={{
@@ -150,8 +153,8 @@ export default class ContinentCharts extends React.Component {
         {/* </div> */}
         
         {/* <div className = "row"> */}
-
         <div className="col-xs-12 col-md-6">
+        <Card style = {{marginBottom: "10px"}}><CardContent>
           <Pie
             data={{
               labels: labelContinents,
@@ -206,7 +209,9 @@ export default class ContinentCharts extends React.Component {
             }
              }}
           />
+        </CardContent></Card>
         </div>
+
 
         {/* <div className="col-xs-12 col-md-6">
           <Pie

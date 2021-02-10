@@ -72,8 +72,8 @@ class TopCountryCard extends React.Component {
           <Typography gutterBottom variant="h6" component="h2" style = {{display: "inline", marginBottom: 0}}>
             {casesCountry[i].toLocaleString()} cases
           </Typography>
-          <Typography variant="body1" component="p" color = "red" style={{display: "inline", marginTop: 0, marginLeft:5, fontSize: "0.8rem"}}>
-           {todayCases[i]? +todayCases[i].toLocaleString():null}
+          <Typography variant="body1" component="p" color = "textSecondary" style={{display: "inline", marginTop: 0, marginLeft:5, fontSize: "0.8rem"}}>
+          {todayCases[i]? "+" : null}{todayCases[i]? todayCases[i].toLocaleString():null}
           </Typography>
           <Typography variant="h6" component="h3" style={{fontWeight:"bold", marginBottom: 5, fontSize: "1rem"}}>
           {percentWorldCases[i].toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})} of total world cases
@@ -109,7 +109,9 @@ class TopCountryCard extends React.Component {
     for (let i = 0; i < labelCountry.length; i++) {
       return (
         <div> 
-          <h1 class="display-4 text-center" id = "country-text" style = {{fontSize: "3rem", margin: 25}}>Top Affected Countries</h1>
+          <h1 class="display-4 text-center" id = "country-text" style = {{fontSize: "3rem", margin: 25}}>
+            Most Affected Countries
+            </h1>
           <hr/>
         <div className = "row">
           {countryCards} 
