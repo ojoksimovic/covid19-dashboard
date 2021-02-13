@@ -2,10 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import GlobalGraphs from './GlobalGraphs'
 import reportWebVitals from './reportWebVitals';
-import CanadaGraphs from './CanadaGraphs';
-import MediaCard from './GlobalCards';
 import {
   BrowserRouter as Router,
   Switch,

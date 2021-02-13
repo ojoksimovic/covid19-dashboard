@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 
 const useStyles = makeStyles({
@@ -61,6 +62,7 @@ class TopCountryCard extends React.Component {
         <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{marginBottom: 10, borderTop: "#B21F00 5px solid"}}>
       <CardActionArea>
+        <Link style = {{textDecoration:"none", color:"black"}}to={"/country/"+labelCountry[i]}>
         <CardMedia
           className={classes.media}
         />
@@ -85,6 +87,7 @@ class TopCountryCard extends React.Component {
             {(fatalityRateCountry[i].toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}))} fatality rate
           </Typography>
         </CardContent>
+        </Link>
       </CardActionArea>
     </Card>
     </div>
@@ -114,7 +117,7 @@ class TopCountryCard extends React.Component {
             </h1>
           <hr/>
         <div className = "row">
-          {countryCards} 
+          {countryCards}
     </div>
     <hr/>
     </div>
