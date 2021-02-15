@@ -1,12 +1,11 @@
 import "./index.css";
 import React from "react";
-import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
 import "./utils";
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import { Pie, Doughnut } from 'react-chartjs-2';
+import { Pie} from 'react-chartjs-2';
 
 export default class ContinentCharts extends React.Component {
 

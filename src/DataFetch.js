@@ -1,6 +1,5 @@
 import "./index.css";
 import React from "react";
-import ReactDOM from "react-dom";
 import "./utils";
 import axios from 'axios';
 import {
@@ -10,8 +9,8 @@ import {
     Redirect,
 } from "react-router-dom";
 import GlobalGraphs from './GlobalGraphs';
-import ContinentCards from './ContinentCards';
 import CountryPage from "./CountryPage";
+import SearchPage from "./SearchPage";
 
 let countryRouter = [];
 
@@ -47,18 +46,33 @@ class DataFetch extends React.Component {
             }));
     }
 
-
+  capitalizeFirstLetter(mySentence){
+    const words = mySentence.split(" ");
+    for (let i = 0; i < words.length; i++) {
+        words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+    }
+    let newName = words.join(" ");
+    return newName
+}
+    
 User(props) {
     let XStats;
+    let XCountry = this.capitalizeFirstLetter(props.match.params.username);
     for (let i = 0; i < this.state.casesCountries.length; i++) {
-        if (this.state.casesCountries[i]["country"] == props.match.params.username) {
+        if (this.state.casesCountries[i]["country"].toLowerCase() == props.match.params.username.toLowerCase()) {
           XStats = this.state.casesCountries[i]
         }
       }
-      console.log(XStats)
+    let XProvinceHistory =[];
+    for (let i = 0; i < this.state.historyCountries.length; i++){
+        if (this.state.historyCountries[i]["country"].toLowerCase() == [props.match.params.username.toLowerCase()]) {
+            XProvinceHistory.push(this.state.historyCountries[i])
+        }
+    }
     return <CountryPage
     XStats = {XStats}
-    XCountry = {props.match.params.username}
+    XProvinceHistory = {XProvinceHistory}
+    XCountry = {XCountry}
     />
   }
 
@@ -91,7 +105,7 @@ User(props) {
                                 historyGlobal={this.state.historyGlobal}
                                 historyCountries={this.state.historyCountries}
                             />} />
-                    <Route 
+                    {/* <Route 
                     path="/country/Canada"
                     render={ () =>
                     <CountryPage
@@ -104,9 +118,9 @@ User(props) {
                     <CountryPage
                     casesCountries = {this.state.casesCountries}
                     XCountry = "USA"
-                    />} />               
-                    {/* <Route path="/compare" component={ContinentCards} />
-              <Route path="/search" component={ContinentCards} />  */}
+                    />} />                */}
+                    {/* <Route path="/compare" component={ContinentCards} />  */}
+              <Route path="/search" component={SearchPage} />
                 </Switch>
             </Router>
 
