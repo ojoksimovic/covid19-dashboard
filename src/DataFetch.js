@@ -17,7 +17,8 @@ let countryRouter = [];
 class DataFetch extends React.Component {
     constructor(props) {
         super(props);
-        this.User = this.User.bind(this);
+        this.CountryName = this.CountryName.bind(this);
+        this.CountryList = this.CountryList.bind(this);
         this.state = {
             historyGlobal: null,
             historyCountries: null,
@@ -47,7 +48,7 @@ class DataFetch extends React.Component {
     }
 
   capitalizeFirstLetter(mySentence){
-    const words = mySentence.split(" ");
+    const words = mySentence.split("%20");
     for (let i = 0; i < words.length; i++) {
         words[i] = words[i][0].toUpperCase() + words[i].substr(1);
     }
@@ -55,17 +56,17 @@ class DataFetch extends React.Component {
     return newName
 }
     
-User(props) {
+CountryName(props) {
     let XStats;
-    let XCountry = this.capitalizeFirstLetter(props.match.params.username);
+    let XCountry = this.capitalizeFirstLetter(props.match.params.countryname);
     for (let i = 0; i < this.state.casesCountries.length; i++) {
-        if (this.state.casesCountries[i]["country"].toLowerCase() == props.match.params.username.toLowerCase()) {
+        if (this.state.casesCountries[i]["country"].toLowerCase() == props.match.params.countryname.toLowerCase()) {
           XStats = this.state.casesCountries[i]
         }
       }
     let XProvinceHistory =[];
     for (let i = 0; i < this.state.historyCountries.length; i++){
-        if (this.state.historyCountries[i]["country"].toLowerCase() == [props.match.params.username.toLowerCase()]) {
+        if (this.state.historyCountries[i]["country"].toLowerCase() == [props.match.params.countryname.toLowerCase()] && this.state.historyCountries[i]["province"] != null) {
             XProvinceHistory.push(this.state.historyCountries[i])
         }
     }
@@ -73,6 +74,19 @@ User(props) {
     XStats = {XStats}
     XProvinceHistory = {XProvinceHistory}
     XCountry = {XCountry}
+    />
+  }
+  CountryList(){
+      console.log(this.state.casesCountries)
+      let countryList = [];
+    for (let i = 0; i < this.state.casesCountries.length; i++) {
+        countryList.push(
+            { flag: this.state.casesCountries[i].countryInfo.flag,
+                name:this.state.casesCountries[i].country
+    })}
+    console.log(countryList);
+    return <SearchPage
+    countryList = {countryList}
     />
   }
 
@@ -94,7 +108,7 @@ User(props) {
             <Router>
                 <Switch>
                     <Route exact path="/"><Redirect to="/global" /></Route>
-                    <Route path="/country/:username" component={this.User} />
+                    <Route path="/country/:countryname" component={this.CountryName} />
                     <Route
                         path="/global"
                         render={() =>
@@ -105,22 +119,7 @@ User(props) {
                                 historyGlobal={this.state.historyGlobal}
                                 historyCountries={this.state.historyCountries}
                             />} />
-                    {/* <Route 
-                    path="/country/Canada"
-                    render={ () =>
-                    <CountryPage
-                    casesCountries = {this.state.casesCountries}
-                    XCountry = "Canada"
-                    />} />
-                    <Route 
-                    path="/country/USA"
-                    render={ () =>
-                    <CountryPage
-                    casesCountries = {this.state.casesCountries}
-                    XCountry = "USA"
-                    />} />                */}
-                    {/* <Route path="/compare" component={ContinentCards} />  */}
-              <Route path="/search" component={SearchPage} />
+              <Route path="/search" component={this.CountryList} />
                 </Switch>
             </Router>
 

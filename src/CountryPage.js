@@ -71,6 +71,7 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
     }
     let newName = words.join(" ");
     return newName
+  
   }
 
   function ProvinceCards() {
@@ -607,7 +608,7 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
                   component="p"
                   style={{ marginTop: 5 }}
                 >
-                  {XStats.critical.toLocaleString()} Remain in Critical
+                  {XStats.critical? XStats.critical.toLocaleString(): null} Remain in Critical
                   Condition
                 </Typography>
               </CardContent>

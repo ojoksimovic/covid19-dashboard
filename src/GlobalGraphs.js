@@ -20,7 +20,6 @@ class GlobalGraphs extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.props.cases);
       this.worldConfirmedChart();
       this.worldConfirmedLogChart();
   }
@@ -257,8 +256,8 @@ class GlobalGraphs extends React.Component {
   render() {
 
     return (
-      <div class = "text-center">
-              <h1 class="display-4" id = "title-text">Global Covid-19</h1>
+      <div>
+              <h1 class="display-4 text-center" id = "title-text">Global Covid-19</h1>
       <hr/>
       <div className="GlobalGraphs container-fluid">
               <MediaCard data = {this.props.cases} />

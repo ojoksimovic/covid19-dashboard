@@ -65,7 +65,6 @@ class ContinentCards extends React.Component {
       continentCards[i] = (
         <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{marginBottom: 10, borderTop: cardColor[i] + " 5px solid"}}>
-      <CardActionArea>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -91,7 +90,6 @@ class ContinentCards extends React.Component {
             {(fatalityRateContinents[i].toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}))} Fatality Rate
           </Typography>
         </CardContent>
-      </CardActionArea>
     </Card>
     </div>
 

@@ -25,7 +25,6 @@ export default function MediaCard({data}) {
       <div className = "row">
       <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{borderTop: "#00A6B4 5px solid"}}>
-      <CardActionArea>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -45,13 +44,11 @@ export default function MediaCard({data}) {
             {((data.cases)/(data.population)).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})} of Global Population
           </Typography>
         </CardContent>
-      </CardActionArea>
     </Card>
     </div>
 
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{borderTop: "#C9DE00 5px solid"}}>
-      <CardActionArea>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -71,13 +68,11 @@ export default function MediaCard({data}) {
             {(data.critical.toLocaleString())} Remain in Critical Condition
           </Typography>
         </CardContent>
-      </CardActionArea>
     </Card>
     </div>
 
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{borderTop: "#2FDE00 5px solid"}}>
-      <CardActionArea>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -97,12 +92,10 @@ export default function MediaCard({data}) {
             {((data.recovered)/(data.cases)).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})} of Confirmed Cases
           </Typography>
         </CardContent>
-      </CardActionArea>
     </Card>
     </div>
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
     <Card className={classes.root} style = {{borderTop: "#B21F00 5px solid"}}>
-      <CardActionArea>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -122,7 +115,6 @@ export default function MediaCard({data}) {
             {((data.deaths)/(data.cases)).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})} of Confirmed Cases
           </Typography>
         </CardContent>
-      </CardActionArea>
     </Card>
     </div>
     </div>
