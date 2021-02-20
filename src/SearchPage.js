@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 
 
 const useStyles = makeStyles({
@@ -13,6 +14,19 @@ const useStyles = makeStyles({
     },
   },
 });
+function countryLink(country){
+  const words = country.split(" ");
+  for (let i = 0; i < words.length; i++) {
+      words[i] = words[i][0].toUpperCase() + words[i].substr(1);
+  }
+  let countryLink = words.join("%20");
+  return countryLink
+}
+
+function handleChange (object, value) {
+console.log(value.name);
+window.location.pathname='/country/'+countryLink(value.name)
+}
 
 
 export default function CountrySelect({countryList}) {
@@ -32,8 +46,9 @@ export default function CountrySelect({countryList}) {
 
       <div className="row">
         <div style={{ marginTop: 20 }} className="col-10 offset-1 col-md-6 offset-md-3">
+          
           <Autocomplete
-            onChange={() => { console.log("link to country page")}}
+            onChange= {handleChange}
             id="combo-box-demo"
             options={countryList}
             getOptionLabel={(option) => option.name}
