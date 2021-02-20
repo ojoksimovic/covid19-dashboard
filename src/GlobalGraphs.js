@@ -58,7 +58,10 @@ class GlobalGraphs extends React.Component {
         ],
       },
       options: {
+        aspectRatio: 1.5,
         legend: {
+          labels: {
+            usePointStyle: true},
           display: true,
           position: "bottom",
         },
@@ -176,10 +179,13 @@ class GlobalGraphs extends React.Component {
       },
       options: {
         legend: {
+          labels: {
+            usePointStyle: true},
           display: true,
           position: "bottom",
         },
         responsive: true,
+        aspectRatio: 1.5,
         title: {
           display: true,
           text: "Cases (Log)",
@@ -264,7 +270,7 @@ class GlobalGraphs extends React.Component {
               <hr/>
         <div className="row">
           <div className="col-xs-10 offset-xs-1 col-lg-6">
-            <Card style = {{marginBottom: "10px"}}><CardContent><canvas id="canvasConfirmed"></canvas></CardContent></Card>
+            <Card style = {{marginBottom: "10px"}}><CardContent><canvas aspectRatio	= "1" id="canvasConfirmed"></canvas></CardContent></Card>
           </div>
           <div className="col-xs-10 offset-xs-1 col-lg-6">
           <Card style = {{marginBottom: "10px"}}><CardContent><canvas id="canvasConfirmedLog"></canvas></CardContent></Card>

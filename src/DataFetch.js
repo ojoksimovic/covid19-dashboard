@@ -11,6 +11,7 @@ import {
 import GlobalGraphs from './GlobalGraphs';
 import CountryPage from "./CountryPage";
 import SearchPage from "./SearchPage";
+import Compare from "./ComparePage";
 
 let countryRouter = [];
 
@@ -120,6 +121,8 @@ CountryName(props) {
                                 historyCountries={this.state.historyCountries}
                             />} />
               <Route path="/search" component={this.CountryList} />
+              <Route path="/compare" component={Compare} />
+
                 </Switch>
             </Router>
 

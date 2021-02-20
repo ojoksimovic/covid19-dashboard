@@ -152,7 +152,10 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
         datasets: data,
       },
       options: {
+        aspectRatio: 1.3,
         legend: {
+          labels: {
+            usePointStyle: true},
           display: true,
           position: "bottom",
         },
@@ -306,7 +309,10 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
         ],
       },
       options: {
+        aspectRatio: 1.5,
         legend: {
+          labels: {
+            usePointStyle: true},
           display: true,
           position: "bottom",
         },
@@ -427,7 +433,10 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
         ],
       },
       options: {
+        aspectRatio: 1.5,
         legend: {
+          labels: {
+            usePointStyle: true},
           display: true,
           position: "bottom",
         },
@@ -518,7 +527,7 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
         </h1>
         <hr />
         <p id="population-text">
-          Population: {XStats.population.toLocaleString()}
+          Population: {XStats.population? XStats.population.toLocaleString(): "unconfirmed"}
         </p>
         <hr />
 
@@ -556,11 +565,10 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
                   component="p"
                   style={{ marginTop: 5 }}
                 >
-                  {(XStats.cases / XStats.population).toLocaleString(
+                  {XStats.population? (XStats.cases / XStats.population).toLocaleString(
                     undefined,
                     { style: "percent", minimumFractionDigits: 2 }
-                  )}{" "}
-                  of Population
+                  )+ " of Population":null}
                 </Typography>
               </CardContent>
             </Card>
@@ -673,7 +681,7 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
                   component="h2"
                   style={{ display: "inline" }}
                 >
-                  {XStats.deaths.toLocaleString()}
+                  {XStats.deaths? XStats.deaths.toLocaleString(): "unconfirmed"}
                 </Typography>
                 <Typography
                   variant="body1"
