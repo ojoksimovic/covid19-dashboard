@@ -11,7 +11,7 @@ import {
 import GlobalGraphs from './GlobalGraphs';
 import CountryPage from "./CountryPage";
 import SearchPage from "./SearchPage";
-import Compare from "./ComparePage";
+import ComparePage from "./ComparePage";
 
 let countryRouter = [];
 
@@ -20,6 +20,7 @@ class DataFetch extends React.Component {
         super(props);
         this.CountryName = this.CountryName.bind(this);
         this.CountryList = this.CountryList.bind(this);
+        this.ComparePageList = this.ComparePageList.bind(this);
         this.state = {
             historyGlobal: null,
             historyCountries: null,
@@ -91,6 +92,20 @@ CountryName(props) {
     />
   }
 
+  ComparePageList(){
+    console.log(this.state.casesCountries)
+    let countryList = [];
+  for (let i = 0; i < this.state.casesCountries.length; i++) {
+      countryList.push(
+          { flag: this.state.casesCountries[i].countryInfo.flag,
+              name:this.state.casesCountries[i].country
+  })}
+  console.log(countryList);
+  return <ComparePage
+  countryList = {countryList}
+  />
+}
+
     render() {
 
         if (this.state.cases == null || this.state.historyCountries == null || this.state.casesContinents == null) {
@@ -121,7 +136,7 @@ CountryName(props) {
                                 historyCountries={this.state.historyCountries}
                             />} />
               <Route path="/search" component={this.CountryList} />
-              <Route path="/compare" component={Compare} />
+              <Route path="/compare" component={this.ComparePageList} />
 
                 </Switch>
             </Router>

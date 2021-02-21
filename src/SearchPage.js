@@ -43,7 +43,6 @@ export default function CountrySelect({countryList}) {
         </div>
       </div>
       <hr />
-
       <div className="row">
         <div style={{ marginTop: 20 }} className="col-10 offset-1 col-md-6 offset-md-3">
           
