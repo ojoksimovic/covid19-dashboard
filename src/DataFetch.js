@@ -93,16 +93,19 @@ CountryName(props) {
   }
 
   ComparePageList(){
-    console.log(this.state.casesCountries)
+    console.log(this.state.historyCountries)
     let countryList = [];
   for (let i = 0; i < this.state.casesCountries.length; i++) {
       countryList.push(
           { flag: this.state.casesCountries[i].countryInfo.flag,
               name:this.state.casesCountries[i].country
   })}
-  console.log(countryList);
+
+  
   return <ComparePage
   countryList = {countryList}
+  casesCountries = {this.state.casesCountries}
+  historyCountries = {this.state.historyCountries}
   />
 }
 

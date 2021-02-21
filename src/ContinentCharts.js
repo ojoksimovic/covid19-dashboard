@@ -42,20 +42,20 @@ export default class ContinentCharts extends React.Component {
               {
                 label: 'Rainfall',
                 backgroundColor: [
-                  '#B21F00',
-                  '#C9DE00',
-                  '#2FDE00',
-                  '#00A6B4',
-                  '#6800B4',
-                  'orange'
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
                 ],
                 hoverBackgroundColor: [
-                  '#501800',
-                  '#4B5000',
-                  '#175000',
-                  '#003350',
-                  '#35014F',
-                  'orange'
+                  'rgb(255, 99, 132)',
+                  'rgb(255, 159, 64)',
+                  'rgb(255, 205, 86)',
+                  'rgb(75, 192, 192)',
+                  'rgb(54, 162, 235)',
+                  'rgb(153, 102, 255)',
                 ],
                 data: casesContinents
               }
@@ -68,6 +68,9 @@ export default class ContinentCharts extends React.Component {
               fontSize: 20
             },
             legend: {
+              labels: {
+                usePointStyle: true
+            },
               display: true,
               position: 'right'
             },
@@ -161,20 +164,20 @@ export default class ContinentCharts extends React.Component {
                 {
                   label: 'Rainfall',
                   backgroundColor: [
-                    '#B21F00',
-                    '#C9DE00',
-                    '#2FDE00',
-                    '#00A6B4',
-                    '#6800B4',
-                    'orange'
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
                   ],
                   hoverBackgroundColor: [
-                    '#501800',
-                    '#4B5000',
-                    '#175000',
-                    '#003350',
-                    '#35014F',
-                    'orange'
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)',
+                    'rgb(54, 162, 235)',
+                    'rgb(153, 102, 255)',
                   ],
                   data: deathsContinents
                 }
@@ -187,6 +190,9 @@ export default class ContinentCharts extends React.Component {
                 fontSize: 20
               },
               legend: {
+                labels: {
+                  usePointStyle: true
+              },
                 display: true,
                 position: 'right'
               },

@@ -6,22 +6,54 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CompareGraphs from './CompareGraphs';
-import CompareTable from './CompareTable'
+import CompareTable from './CompareTable';
+import axios from 'axios';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparePage({countryList}) {
+export default function ComparePage({countryList, casesCountries}) {
+
+ let historyCountries;
 
   const [count, setCount] = useState(0);
-
+  const [compareTableData, setcompareTableData] = useState([]);
+  const [compareGraphsData, setcompareGraphsData] = useState([]);
 
   function handleChange (object, value) {
-    setCount(value.length)
     if (value.length > 0){
-    console.log(value[value.length-1].name+" was just clicked");
-}}
+    let XCountries = value[0].name;
+    console.log(XCountries);
+    if (value.length > 1){
+    for (let i = 1; i < value.length; i++){
+      XCountries = XCountries + "%2C" + value[i].name
+    }}
+    let countryURL = "https://disease.sh/v3/covid-19/historical/" + XCountries + "?lastdays=all";
 
+    axios.all([axios.get(countryURL)]).then(
+      axios.spread((req1) => {
+        setcompareGraphsData(req1.data);
+      })
+    );}
+    else {setcompareGraphsData([])}
+    console.log(compareGraphsData);
+    getComparisonData(value)
+}
+
+function getComparisonData(value){
+  console.log(value);
+  setcompareTableData([]);
+  setcompareGraphsData([]);
+  for (let i = 0; i < value.length; i++){
+    for (let j = 0; j < casesCountries.length; j++){
+      if (casesCountries[j].country == value[i].name){
+        setcompareTableData(arr => [...arr,(casesCountries[j])]);  
+      }
+    }
+  }
+  setCount(value.length)
+  
+}
   return (
     <div className="container-fluid text-center">
     <div className="row">
@@ -55,15 +87,17 @@ export default function ComparePage({countryList}) {
         </React.Fragment>
       )}
       renderInput={(params) => (
-        <TextField {...params} variant="outlined" label="Choose countries to compare" />
+        <TextField {...params} variant="outlined" label="Choose two or more countries to compare" />
       )}
     />
     </div>
     </div>
-    {count>0?
+    {compareGraphsData.length > 0?
     <div>
-    <CompareGraphs/>
-    <CompareTable/>
+      <hr/>
+    <CompareGraphs compareGraphsData = {compareGraphsData}/>
+    <CompareTable 
+    casesCountries = {compareTableData}/>
     </div>
     :null}
     </div>

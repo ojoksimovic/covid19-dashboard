@@ -28,12 +28,12 @@ let fatalityRateContinents = [];
 let continentCards = [];
 
 let cardColor= [
-  '#B21F00',
-  '#C9DE00',
-  '#2FDE00',
-  '#00A6B4',
-  '#6800B4',
-  'orange'
+  'rgb(255, 99, 132)',
+  'rgb(255, 159, 64)',
+  'rgb(255, 205, 86)',
+  'rgb(75, 192, 192)',
+  'rgb(54, 162, 235)',
+  'rgb(153, 102, 255)'
 ]
 
 class ContinentCards extends React.Component {
