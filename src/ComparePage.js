@@ -20,7 +20,7 @@ export default function ComparePage({countryList}) {
     setCount(value.length)
     if (value.length > 0){
     console.log(value[value.length-1].name+" was just clicked");
-}      console.log(count)}
+}}
 
   return (
     <div className="container-fluid text-center">
@@ -55,7 +55,7 @@ export default function ComparePage({countryList}) {
         </React.Fragment>
       )}
       renderInput={(params) => (
-        <TextField {...params} variant="outlined" label="Choose countries to compare" placeholder="Choose countries to compare" />
+        <TextField {...params} variant="outlined" label="Choose countries to compare" />
       )}
     />
     </div>
