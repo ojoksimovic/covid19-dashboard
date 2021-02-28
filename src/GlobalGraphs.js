@@ -14,15 +14,15 @@ import TopCountryCard from "./TopCountryCard";
 class GlobalGraphs extends React.Component {
   constructor(props) {
     super(props);
-
     this.worldConfirmedChart = this.worldConfirmedChart.bind(this);
     this.worldConfirmedLogChart = this.worldConfirmedLogChart.bind(this);
   }
 
   componentDidMount() {
-      this.worldConfirmedChart();
-      this.worldConfirmedLogChart();
+    this.worldConfirmedChart();
+    this.worldConfirmedLogChart();
   }
+
 
   worldConfirmedChart() {
     var date = Object.keys(this.props.historyGlobal.cases);
@@ -61,7 +61,8 @@ class GlobalGraphs extends React.Component {
         aspectRatio: 1.5,
         legend: {
           labels: {
-            usePointStyle: true},
+            usePointStyle: true,
+          },
           display: true,
           position: "bottom",
         },
@@ -75,10 +76,14 @@ class GlobalGraphs extends React.Component {
           mode: "index",
           intersect: false,
           callbacks: {
-            label: function(tooltipItem, data) {
+            label: function (tooltipItem, data) {
               var dataLabel = data.labels[tooltipItem.index];
-              var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
-    
+              var value =
+                ": " +
+                data.datasets[tooltipItem.datasetIndex].data[
+                  tooltipItem.index
+                ].toLocaleString();
+
               if (Chart.helpers.isArray(dataLabel)) {
                 dataLabel = dataLabel.slice();
                 dataLabel[0] += value;
@@ -86,8 +91,8 @@ class GlobalGraphs extends React.Component {
                 dataLabel += value;
               }
               return dataLabel;
-            }
-          }
+            },
+          },
         },
         hover: {
           mode: "nearest",
@@ -160,7 +165,7 @@ class GlobalGraphs extends React.Component {
             borderColor: "#00A6B4",
             data: data1,
             fill: false,
-          },          
+          },
           {
             label: "Deaths",
             backgroundColor: "#B21F00",
@@ -180,7 +185,8 @@ class GlobalGraphs extends React.Component {
       options: {
         legend: {
           labels: {
-            usePointStyle: true},
+            usePointStyle: true,
+          },
           display: true,
           position: "bottom",
         },
@@ -195,10 +201,14 @@ class GlobalGraphs extends React.Component {
           mode: "index",
           intersect: false,
           callbacks: {
-            label: function(tooltipItem, data) {
+            label: function (tooltipItem, data) {
               var dataLabel = data.labels[tooltipItem.index];
-              var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
-    
+              var value =
+                ": " +
+                data.datasets[tooltipItem.datasetIndex].data[
+                  tooltipItem.index
+                ].toLocaleString();
+
               if (Chart.helpers.isArray(dataLabel)) {
                 dataLabel = dataLabel.slice();
                 dataLabel[0] += value;
@@ -206,8 +216,8 @@ class GlobalGraphs extends React.Component {
                 dataLabel += value;
               }
               return dataLabel;
-            }
-          }
+            },
+          },
         },
         hover: {
           mode: "nearest",
@@ -260,42 +270,56 @@ class GlobalGraphs extends React.Component {
   }
 
   render() {
-
     return (
       <div>
-              <h1 class="display-4 text-center" id = "title-text">Global Covid-19</h1>
-      <hr/>
-      <div className="GlobalGraphs container-fluid">
-              <MediaCard data = {this.props.cases} />
-              <hr/>
-        <div className="row">
-          <div className="col-xs-10 offset-xs-1 col-lg-6">
-            <Card style = {{marginBottom: "10px"}}><CardContent><canvas aspectRatio	= "1" id="canvasConfirmed"></canvas></CardContent></Card>
+        <h1 class="display-4 text-center" id="title-text">
+          Global Covid-19
+        </h1>
+        <hr />
+        <div className="GlobalGraphs container-fluid">
+          <MediaCard data={this.props.cases} />
+          <hr />
+          <div className="row">
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas aspectRatio="1" id="canvasConfirmed"></canvas>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas id="canvasConfirmedLog"></canvas>
+                </CardContent>
+              </Card>
+            </div>
           </div>
-          <div className="col-xs-10 offset-xs-1 col-lg-6">
-          <Card style = {{marginBottom: "10px"}}><CardContent><canvas id="canvasConfirmedLog"></canvas></CardContent></Card>
-          </div>
-          </div>
-        <hr/>
-        <ContinentCards casesContinents = {this.props.casesContinents} />
-        <ContinentCharts casesContinents = {this.props.casesContinents} />
-        <TopCountryCard casesCountries = {this.props.casesCountries} cases = {this.props.cases} />
-        <GlobalTable casesCountries = {this.props.casesCountries} />
-        <div className = "row">
-      <div className = "col-12 text-center">
-        <p style = {{textAlign:"center", fontSize: "1rem"}}>Last Updated: {(new Date(this.props.cases["updated"])).toString()}</p>
-      </div>
-      
-      <div className = "col-12 text-center">
-      <hr/>
-      <p id = "olivera" style = {{textAlign:"center", fontSize: "1rem"}}>developed by <a href = "https://www.olivera.tech">olivera.tech</a></p>
+          <hr />
+          <ContinentCards casesContinents={this.props.casesContinents} />
+          <ContinentCharts casesContinents={this.props.casesContinents} />
+          <TopCountryCard
+            casesCountries={this.props.casesCountries}
+            cases={this.props.cases}
+          />
+          <GlobalTable casesCountries={this.props.casesCountries} />
+          <div className="row">
+            <div className="col-12 text-center">
+              <p style={{ textAlign: "center", fontSize: "1rem" }}>
+                Last Updated: {new Date(this.props.cases["updated"]).toString()}
+              </p>
+            </div>
 
+            <div className="col-12 text-center">
+              <hr />
+              <p id="olivera" style={{ textAlign: "center", fontSize: "1rem" }}>
+                developed by <a href="https://www.olivera.tech">olivera.tech</a>
+              </p>
+            </div>
+          </div>
+          {/* <CanadaGraph historyConfirmed = {this.state.historyConfirmed} /> */}
+        </div>
       </div>
-      </div>
-        {/* <CanadaGraph historyConfirmed = {this.state.historyConfirmed} /> */}
-      </div>
-      </div>
-      
     );
   }
 }

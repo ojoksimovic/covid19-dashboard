@@ -87,7 +87,7 @@ function getComparisonData(value){
         </React.Fragment>
       )}
       renderInput={(params) => (
-        <TextField {...params} variant="outlined" label="Choose two or more countries to compare" />
+        <TextField {...params} variant="outlined" label="Choose two or more countries" />
       )}
     />
     </div>

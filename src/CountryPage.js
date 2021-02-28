@@ -103,7 +103,7 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
                 {provinceDeaths[provinceDeaths.length - 1].toLocaleString()} deaths
           </Typography>
               <Typography gutterBottom variant="body1" style={{ color: "green" }}>
-                {provinceRecovered[provinceRecovered.length - 1].toLocaleString()} recovered
+                {XCountry == "Canada"? null: provinceRecovered[provinceRecovered.length - 1].toLocaleString() + " recovered"}
           </Typography>
 
               <Typography variant="body1" component="p" color="textSecondary" style={{ marginBottom: 0, fontSize: "0.8rem" }}>
