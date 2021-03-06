@@ -12,7 +12,7 @@ import axios from 'axios';
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparePage({countryList, casesCountries}) {
+export default function ComparePage({countryList, casesCountries, vaccineCountries}) {
 
  let historyCountries;
 
@@ -97,7 +97,7 @@ function getComparisonData(value){
       <hr/>
     <CompareGraphs compareGraphsData = {compareGraphsData}/>
     <CompareTable 
-    casesCountries = {compareTableData}/>
+    casesCountries = {compareTableData} vaccineCountries = {vaccineCountries}/>
     </div>
     :null}
     </div>

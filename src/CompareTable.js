@@ -2,7 +2,17 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import MUIDataTable from 'mui-datatables';
 
-export default function CompareTable({ casesCountries }) {
+export default function CompareTable({ casesCountries, vaccineCountries }) {
+
+    var vaccineArray = [];
+    let vac;
+    let vaccineNumber;
+
+    for (let i = 0; i < vaccineCountries.length; i++) {
+      vac = Object.values(vaccineCountries[i]["timeline"]).sort();
+      vaccineNumber = vac[vac.length - 1];
+      vaccineArray[vaccineCountries[i].country] = vaccineNumber;
+    }
 
     var columns = [
         { name: 'country', label: 'Country' },
@@ -21,21 +31,21 @@ export default function CompareTable({ casesCountries }) {
                 customBodyRender: value => value ? value.toLocaleString() : null
             }
         },
-        {
-            name: 'activeCases', label: ' Active Cases', options: {
-                customBodyRender: value => value ? value.toLocaleString() : null
-            }
-        },
-        {
-            name: 'critical', label: 'Critical', options: {
-                customBodyRender: value => value ? value.toLocaleString() : null
-            }
-        },
-        {
-            name: 'recovered', label: 'Recovered', options: {
-                customBodyRender: value => value ? value.toLocaleString() : null
-            }
-        },
+        // {
+        //     name: 'activeCases', label: ' Active Cases', options: {
+        //         customBodyRender: value => value ? value.toLocaleString() : null
+        //     }
+        // },
+        // {
+        //     name: 'critical', label: 'Critical', options: {
+        //         customBodyRender: value => value ? value.toLocaleString() : null
+        //     }
+        // },
+        // {
+        //     name: 'recovered', label: 'Recovered', options: {
+        //         customBodyRender: value => value ? value.toLocaleString() : null
+        //     }
+        // },
         {
             name: 'deaths', label: 'Deaths', options: {
                 customBodyRender: value => value ? value.toLocaleString() : null
@@ -66,6 +76,20 @@ export default function CompareTable({ casesCountries }) {
                 customBodyRender: value => value ? value.toLocaleString() : null
             }
         },
+        {
+            name: "vaccinesAdministered",
+            label: "Vaccines Administered",
+            options: {
+              customBodyRender: (value) => (value ? value.toLocaleString() : null),
+            },
+          },
+          {
+            name: "percentVaccinated",
+            label: "Population Vaccinated",
+            options: {
+              customBodyRender: (value) => (value ? value.toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}) : null),
+            },
+          },
     ];
 
     const options = {
@@ -75,21 +99,26 @@ export default function CompareTable({ casesCountries }) {
     function getData() {
         data = [];
         for (let i = 0; i < casesCountries.length; i++) {
-
+            let vaccineNumber = 0;
+            if (casesCountries[i]["country"] in vaccineArray) {
+              vaccineNumber = vaccineArray[casesCountries[i]["country"]];
+            };
             data.push({
                 country: casesCountries[i]["country"],
                 cases: casesCountries[i]["cases"],
                 casesToday: casesCountries[i]["todayCases"],
                 casesPerOneMillion: casesCountries[i]["casesPerOneMillion"],
-                activeCases: casesCountries[i]["active"],
-                critical: casesCountries[i]["critical"],
-                recovered: casesCountries[i]["recovered"],
+                // activeCases: casesCountries[i]["active"],
+                // critical: casesCountries[i]["critical"],
+                // recovered: casesCountries[i]["recovered"],
                 deaths: casesCountries[i]["deaths"],
                 deathsToday: casesCountries[i]["todayDeaths"],
                 deathsPerOneMillion: casesCountries[i]["deathsPerOneMillion"],
                 tests: casesCountries[i]["tests"],
                 testsPerOneMillion: casesCountries[i]["testsPerOneMillion"],
-                population: casesCountries[i]["population"]
+                population: casesCountries[i]["population"],
+                vaccinesAdministered: vaccineNumber,
+                percentVaccinated: vaccineNumber/(casesCountries[i]["population"])
             })
         }
     }

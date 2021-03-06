@@ -27,7 +27,8 @@ class DataFetch extends React.Component {
             cases: null,
             casesContinents: null,
             casesCountries: null,
-            vaccineGlobal: null
+            vaccineGlobal: null,
+            vaccineCountries: null
         };
     }
 
@@ -38,16 +39,18 @@ class DataFetch extends React.Component {
             axios.get('https://disease.sh/v3/covid-19/historical?lastdays=all'),
             axios.get('https://disease.sh/v3/covid-19/continents?yesterday=false&twoDaysAgo=false&allowNull=true'),
             axios.get('https://disease.sh/v3/covid-19/countries?yesterday=false&twoDaysAgo=false&sort=cases&allowNull=true'),
-            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=all')
+            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=all'),
+            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all')
         ])
-            .then(axios.spread((req1, req2, req3, req4, req5, req6) => {
+            .then(axios.spread((req1, req2, req3, req4, req5, req6, req7) => {
                 this.setState({
                     cases: req1.data,
                     historyGlobal: req2.data,
                     historyCountries: req3.data,
                     casesContinents: req4.data,
                     casesCountries: req5.data,
-                    vaccineGlobal: req6.data
+                    vaccineGlobal: req6.data,
+                    vaccineCountries: req7.data
                 });
             }));
     }
@@ -79,6 +82,7 @@ CountryName(props) {
     XStats = {XStats}
     XProvinceHistory = {XProvinceHistory}
     XCountry = {XCountry}
+    XVaccineCountries = {this.state.vaccineCountries}
     />
   }
   CountryList(){
@@ -109,6 +113,7 @@ CountryName(props) {
   countryList = {countryList}
   casesCountries = {this.state.casesCountries}
   historyCountries = {this.state.historyCountries}
+  vaccineCountries = {this.state.vaccineCountries}
   />
 }
 
@@ -141,6 +146,7 @@ CountryName(props) {
                                 historyGlobal={this.state.historyGlobal}
                                 historyCountries={this.state.historyCountries}
                                 vaccineGlobal={this.state.vaccineGlobal}
+                                vaccineCountries = {this.state.vaccineCountries}
                             />} />
               <Route path="/search" component={this.CountryList} />
               <Route path="/compare" component={this.ComparePageList} />
