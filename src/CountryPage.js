@@ -2,14 +2,14 @@ import "./index.css";
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
-import { Pie} from 'react-chartjs-2';
+import { Pie } from "react-chartjs-2";
 import "./utils";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-// import colourThemeArray from "./ColourTheme"
+import CountryVaccinePie from "./CountryVaccinePie";
 
 const useStyles = makeStyles({
   root: {
@@ -22,288 +22,279 @@ const useStyles = makeStyles({
 });
 
 let colourThemeArray = [
-  'rgb(255, 99, 132)',
-  'rgb(255, 159, 64)',
-  'rgb(255, 205, 86)',
-  'rgb(75, 192, 192)',
-  'rgb(54, 162, 235)',
-  'rgb(153, 102, 255)',
-  'rgb(201, 203, 207)',
-  '#4dc9f6',
-  '#f67019',
-  '#f53794',
-  '#537bc4',
-  '#acc236',
-  '#166a8f',
-  '#00a950',
-  '#58595b',
-  '#8549ba'
+  "rgb(255, 99, 132)",
+  "rgb(255, 159, 64)",
+  "rgb(255, 205, 86)",
+  "rgb(75, 192, 192)",
+  "rgb(54, 162, 235)",
+  "rgb(153, 102, 255)",
+  "rgb(201, 203, 207)",
+  "#4dc9f6",
+  "#f67019",
+  "#f53794",
+  "#537bc4",
+  "#acc236",
+  "#166a8f",
+  "#00a950",
+  "#58595b",
+  "#8549ba",
 ];
 let provinceCasesData = [];
 let provinceDeathsData = [];
 let date = [];
 
-function CountryPage({ XStats, XProvinceHistory, XCountry }) {
-  const classes = useStyles();
-  let XHistoryStats;
-  let XVaccineStats;
+// import colourThemeArray from "./ColourTheme"
 
-  useEffect(() => {
-    fetchCountryData();
-    // return () => console.log("cleanup");
-  });
+class CountryPage extends React.Component {
+  constructor(props) {
+    super(props);
 
-  function fetchCountryData() {
+    this.fetchCountryData = this.fetchCountryData.bind(this);
+    this.countryHistoricalChart = this.countryHistoricalChart.bind(this);
+    this.countryVaccineChart = this.countryVaccineChart.bind(this);
+    this.countryHistoricalLogChart = this.countryHistoricalLogChart.bind(this);
+    this.provinceData = this.provinceData.bind(this);
+    this.ProvinceCards = this.ProvinceCards.bind(this);
+    this.ProvinceHeader = this.ProvinceHeader.bind(this);
+
+    this.state = {
+      XVaccineStats: null,
+      XHistoryStats: null,
+    };
+  }
+
+  componentDidMount() {
+    this.fetchCountryData();
+  }
+
+  fetchCountryData() {
     let countryURL =
-      "https://disease.sh/v3/covid-19/historical/" + XCountry + "?lastdays=all";
-    let vaccineCountryURL = "https://disease.sh/v3/covid-19/vaccine/coverage/countries/"+ XCountry + "?lastdays=all"
-      axios.all([
-      axios.get(countryURL),
-      axios.get(vaccineCountryURL)
-    ]).then(
+      "https://disease.sh/v3/covid-19/historical/" +
+      this.props.XCountry +
+      "?lastdays=all";
+    let vaccineCountryURL =
+      "https://disease.sh/v3/covid-19/vaccine/coverage/countries/" +
+      this.props.XCountry +
+      "?lastdays=all";
+    axios.all([axios.get(countryURL), axios.get(vaccineCountryURL)]).then(
       axios.spread((req1, req2) => {
-        XHistoryStats = req1.data;
-        XVaccineStats = req2.data.timeline;
-        countryHistoricalChart();
-        countryHistoricalLogChart();
-        // countryVaccineChart();
-        provinceData();
-        // pieData();
+        this.setState({
+          XHistoryStats: req1.data,
+          XVaccineStats: req2.data.timeline,
+        });
+
+        this.countryHistoricalChart();
+        this.countryHistoricalLogChart();
+        this.countryVaccineChart();
+        this.provinceData();
       })
     );
   }
 
-
-// function pieData(){
-//   labelVaccine = ["Vaccinated", "Not Vaccinated"];
-//   var vac = Object.values(XVaccineStats).sort()
-//   let totalVaccinated = (vac[vac.length-1]);
-//   let totalUnVaccinated = (XStats.population - totalVaccinated);
-//   arrayVaccinated = [totalVaccinated, totalUnVaccinated];
-//   percentVaccinated = (totalVaccinated/XStats.population).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})
-// }
-
-
-
-//  function countryVaccinePie() {
-
-//     return (
-//       <div className="col-xs-10 offset-xs-1 col-lg-6">
-
-//         <Card style = {{marginBottom: "10px"}}><CardContent>
-//         <Pie
-//           data={{
-//             labels: labelVaccine,
-//             datasets: [
-//               {
-//                 label: 'Vaccinated',
-//                 backgroundColor: [
-//                     'rgb(54, 162, 235)',
-//                     'rgb(255, 99, 132)'
-//                 ],
-//                 hoverBackgroundColor: [
-//                   'rgb(54, 162, 235)',
-//                   'rgb(255, 99, 132)'
-//                 ],
-//                 data: arrayVaccinated
-//               }
-//             ]
-//           }}
-//           options={{
-//             title: {
-//               display: true,
-//               text: percentVaccinated + " of Population Vaccinated",
-//               fontSize: 20
-//             },
-//             legend: {
-//               labels: {
-//                 usePointStyle: true
-//             },
-//               display: true,
-//               position: 'right'
-//             },
-//             tooltips: {
-//               callbacks: {
-//                 label: function(tooltipItem, data) {
-//                   var dataLabel = data.labels[tooltipItem.index];
-//                   var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
-        
-//                   if (Chart.helpers.isArray(dataLabel)) {
-//                     dataLabel = dataLabel.slice();
-//                     dataLabel[0] += value;
-//                   } else {
-//                     dataLabel += value;
-//                   }
-//                   return dataLabel;
-//                 }
-//               }
-//           }
-//            }}
-//         />
-//         </CardContent></Card>
-        
-//       </div>
-//     )}
-
-function countryVaccineChart() {
-console.log(XVaccineStats);
-  var date = Object.keys(XVaccineStats);
-  var data1 = Object.values(XVaccineStats);
-  var config = {
-    type: "line",
-    data: {
-      labels: date,
-      datasets: [
-        {
-          label: "Vaccines Administered",
-          backgroundColor: "#00A6B4",
-          borderColor: "#00A6B4",
-          data: data1,
-          fill: false,
-        }
-      ],
-    },
-    options: {
-      aspectRatio: 1.5,
-      legend: {
-        labels: {
-          usePointStyle: true,
-        },
-        display: false,
-        position: "bottom",
-      },
-      responsive: true,
-      title: {
-        display: false,
-        text: "Vaccines Administered",
-        fontSize: 20,
-      },
-      tooltips: {
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          label: function (tooltipItem, data) {
-            var dataLabel = data.labels[tooltipItem.index];
-            var value =
-              ": " +
-              data.datasets[tooltipItem.datasetIndex].data[
-                tooltipItem.index
-              ].toLocaleString();
-
-            if (Chart.helpers.isArray(dataLabel)) {
-              dataLabel = dataLabel.slice();
-              dataLabel[0] += value;
-            } else {
-              dataLabel += value;
-            }
-            return dataLabel;
-          },
-        },
-      },
-      hover: {
-        mode: "nearest",
-        intersect: true,
-      },
-      scales: {
-        xAxes: [
+  countryVaccineChart() {
+    console.log(this.state.XVaccineStats);
+    var date = Object.keys(this.state.XVaccineStats);
+    var data1 = Object.values(this.state.XVaccineStats);
+    var config = {
+      type: "line",
+      data: {
+        labels: date,
+        datasets: [
           {
-            gridLines: {
-              display: true,
-              drawBorder: true,
-              drawOnChartArea: false,
-            },
-            display: true,
-            type: "time",
-            time: {
-              unit: "day",
-            },
-            scaleLabel: {
-              display: true,
-              labelString: "Time",
-            },
+            label: "Vaccines Administered",
+            backgroundColor: "#00A6B4",
+            borderColor: "#00A6B4",
+            data: data1,
+            fill: false,
           },
         ],
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              userCallback: function (value, index, values) {
-                value = value.toString();
-                value = value.split(/(?=(?:...)*$)/);
-                value = value.join(",");
-                return value;
+      },
+      options: {
+        aspectRatio: 1.5,
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Vaccines Administered",
+          fontSize: 20,
+        },
+        tooltips: {
+          mode: "index",
+          intersect: false,
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var dataLabel = data.labels[tooltipItem.index];
+              var value =
+                ": " +
+                data.datasets[tooltipItem.datasetIndex].data[
+                  tooltipItem.index
+                ].toLocaleString();
+
+              if (Chart.helpers.isArray(dataLabel)) {
+                dataLabel = dataLabel.slice();
+                dataLabel[0] += value;
+              } else {
+                dataLabel += value;
+              }
+              return dataLabel;
+            },
+          },
+        },
+        hover: {
+          mode: "nearest",
+          intersect: true,
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              type: "time",
+              time: {
+                unit: "day",
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
               },
             },
-            gridLines: {
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                userCallback: function (value, index, values) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(",");
+                  return value;
+                },
+              },
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
               display: true,
-              drawBorder: true,
-              drawOnChartArea: false,
+              scaleLabel: {
+                display: true,
+                labelString: "Vaccines Administered",
+              },
             },
-            display: true,
-            scaleLabel: {
-              display: true,
-              labelString: "Vaccines Administered",
-            },
-          },
-        ],
+          ],
+        },
       },
-    },
-  };
-  var ctx = document.getElementById("canvasVaccine").getContext("2d");
-  window.myLine = new Chart(ctx, config);
+    };
+    var ctx = document.getElementById("canvasVaccine").getContext("2d");
+    window.myLine = new Chart(ctx, config);
 
-  var colorNames = Object.keys(window.chartColors);
-}
+    var colorNames = Object.keys(window.chartColors);
+  }
 
-  function capitalizeFirstLetter(mySentence) {
+  capitalizeFirstLetter(mySentence) {
     const words = mySentence.split(" ");
     for (let i = 0; i < words.length; i++) {
       words[i] = words[i][0].toUpperCase() + words[i].substr(1);
     }
     let newName = words.join(" ");
-    return newName
-  
+    return newName;
   }
 
-  function ProvinceCards() {
+  ProvinceCards() {
     let provinceCardData = [];
     let provinceCases;
     let provinceDeaths;
     let provinceRecovered;
-    console.log(XStats);
+    console.log(this.props.XStats);
 
-    for (let i = 0; i < XProvinceHistory.length; i++) {
-      provinceCases = Object.values(XProvinceHistory[i].timeline.cases)
-      provinceDeaths = Object.values(XProvinceHistory[i].timeline.deaths)
-      provinceRecovered = Object.values(XProvinceHistory[i].timeline.recovered)
+    for (let i = 0; i < this.props.XProvinceHistory.length; i++) {
+      provinceCases = Object.values(
+        this.props.XProvinceHistory[i].timeline.cases
+      );
+      provinceDeaths = Object.values(
+        this.props.XProvinceHistory[i].timeline.deaths
+      );
+      provinceRecovered = Object.values(
+        this.props.XProvinceHistory[i].timeline.recovered
+      );
       provinceCardData.push(
-
         <div className="col-6 col-md-4 col-lg-3">
-          <Card
-            className={classes.root}
-            style={{ borderTop: colourThemeArray[i] + " 5px solid" }}
-          >
+          <Card style={{ borderTop: colourThemeArray[i] + " 5px solid" }}>
             <CardContent>
               <Typography gutterBottom variant="h6">
-                {capitalizeFirstLetter(XProvinceHistory[i].province)}
+                {this.capitalizeFirstLetter(
+                  this.props.XProvinceHistory[i].province
+                )}
               </Typography>
-              <Typography gutterBottom variant="body1" style={{ marginBottom: 0 }}>
+              <Typography
+                gutterBottom
+                variant="body1"
+                style={{ marginBottom: 0 }}
+              >
                 {provinceCases[provinceCases.length - 1].toLocaleString()} cases
-          </Typography>
-              <Typography gutterBottom variant="body1" color="secondary" style={{ marginBottom: 0 }}>
-                {provinceDeaths[provinceDeaths.length - 1].toLocaleString()} deaths
-          </Typography>
-              <Typography gutterBottom variant="body1" style={{ color: "green" }}>
-                {XCountry == "Canada"? null: provinceRecovered[provinceRecovered.length - 1].toLocaleString() + " recovered"}
-          </Typography>
+              </Typography>
+              <Typography
+                gutterBottom
+                variant="body1"
+                color="secondary"
+                style={{ marginBottom: 0 }}
+              >
+                {provinceDeaths[provinceDeaths.length - 1].toLocaleString()}{" "}
+                deaths
+              </Typography>
+              <Typography
+                gutterBottom
+                variant="body1"
+                style={{ color: "green" }}
+              >
+                {this.props.XCountry == "Canada"
+                  ? null
+                  : provinceRecovered[
+                      provinceRecovered.length - 1
+                    ].toLocaleString() + " recovered"}
+              </Typography>
 
-              <Typography variant="body1" component="p" color="textSecondary" style={{ marginBottom: 0, fontSize: "0.8rem" }}>
-                {(provinceCases[provinceCases.length - 1] / XStats.cases).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })} of total country cases
-          </Typography>
+              <Typography
+                variant="body1"
+                component="p"
+                color="textSecondary"
+                style={{ marginBottom: 0, fontSize: "0.8rem" }}
+              >
+                {(
+                  provinceCases[provinceCases.length - 1] /
+                  this.props.XStats.cases
+                ).toLocaleString(undefined, {
+                  style: "percent",
+                  minimumFractionDigits: 2,
+                })}{" "}
+                of total country cases
+              </Typography>
 
-              <Typography variant="body1" component="p" color="secondary" style={{ marginBottom: 0, fontSize: "0.8rem" }}>
-                {(provinceDeaths[provinceDeaths.length - 1] / XStats.deaths).toLocaleString(undefined, { style: 'percent', minimumFractionDigits: 2 })} of total country deaths
-          </Typography>
+              <Typography
+                variant="body1"
+                component="p"
+                color="secondary"
+                style={{ marginBottom: 0, fontSize: "0.8rem" }}
+              >
+                {(
+                  provinceDeaths[provinceDeaths.length - 1] /
+                  this.props.XStats.deaths
+                ).toLocaleString(undefined, {
+                  style: "percent",
+                  minimumFractionDigits: 2,
+                })}{" "}
+                of total country deaths
+              </Typography>
 
               {/* <Typography variant="body1" component="p" color = "textSecondary" style={{marginTop: 0, fontSize: "0.8rem"}}>
             {(fatalityRateCountry[i].toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}))} fatality rate
@@ -311,19 +302,17 @@ console.log(XVaccineStats);
             </CardContent>
           </Card>
         </div>
-      )
+      );
     }
-
     return (
       <div className="container-fluid">
-        <div className="row">
-          {provinceCardData}
-        </div>
+        <div className="row">{this.provinceCardData}</div>
         <hr />
       </div>
-    )
+    );
   }
-  function ProvinceHeader() {
+
+  ProvinceHeader() {
     return (
       <div className="container-fluid text-center">
         <hr />
@@ -335,7 +324,7 @@ console.log(XVaccineStats);
     );
   }
 
-  function provinceChart(data, title, canvasid, yaxis) {
+  provinceChart(data, title, canvasid, yaxis) {
     var config = {
       type: "line",
       data: {
@@ -346,7 +335,8 @@ console.log(XVaccineStats);
         aspectRatio: 1.3,
         legend: {
           labels: {
-            usePointStyle: true},
+            usePointStyle: true,
+          },
           display: true,
           position: "bottom",
         },
@@ -421,7 +411,7 @@ console.log(XVaccineStats);
               display: true,
               scaleLabel: {
                 display: true,
-                labelString: title
+                labelString: title,
               },
             },
           ],
@@ -434,42 +424,62 @@ console.log(XVaccineStats);
     var colorNames = Object.keys(window.chartColors);
   }
 
-  function provinceData() {
-    if (XProvinceHistory.length > 1) {
-      console.log(XProvinceHistory);
-      date = Object.keys(XProvinceHistory[0].timeline.cases)
-      for (let i = 0; i < XProvinceHistory.length; i++) {
+  provinceData() {
+    if (this.props.XProvinceHistory.length > 1) {
+      console.log(this.props.XProvinceHistory);
+      date = Object.keys(this.props.XProvinceHistory[0].timeline.cases);
+      for (let i = 0; i < this.props.XProvinceHistory.length; i++) {
         provinceCasesData.push({
-          label: capitalizeFirstLetter(XProvinceHistory[i].province),
+          label: this.capitalizeFirstLetter(
+            this.props.XProvinceHistory[i].province
+          ),
           backgroundColor: colourThemeArray[i],
           borderColor: colourThemeArray[i],
-          data: Object.values(XProvinceHistory[i].timeline.cases),
+          data: Object.values(this.props.XProvinceHistory[i].timeline.cases),
           fill: false,
         });
         provinceDeathsData.push({
-          label: capitalizeFirstLetter(XProvinceHistory[i].province),
+          label: this.capitalizeFirstLetter(
+            this.props.XProvinceHistory[i].province
+          ),
           backgroundColor: colourThemeArray[i],
           borderColor: colourThemeArray[i],
-          data: Object.values(XProvinceHistory[i].timeline.deaths),
+          data: Object.values(this.props.XProvinceHistory[i].timeline.deaths),
           fill: false,
         });
       }
-      provinceChart(provinceCasesData, "Cases", "canvasProvinceCases", "linear");
-      provinceChart(provinceCasesData, "Cases (Log)", "canvasProvinceCasesLog", "logarithmic");
-      provinceChart(provinceDeathsData, "Deaths", "canvasProvinceDeaths", "linear");
-      provinceChart(provinceDeathsData, "Deaths (Log)", "canvasProvinceDeathsLog", "logarithmic");
+      this.provinceChart(
+        provinceCasesData,
+        "Cases",
+        "canvasProvinceCases",
+        "linear"
+      );
+      this.provinceChart(
+        provinceCasesData,
+        "Cases (Log)",
+        "canvasProvinceCasesLog",
+        "logarithmic"
+      );
+      this.provinceChart(
+        provinceDeathsData,
+        "Deaths",
+        "canvasProvinceDeaths",
+        "linear"
+      );
+      this.provinceChart(
+        provinceDeathsData,
+        "Deaths (Log)",
+        "canvasProvinceDeathsLog",
+        "logarithmic"
+      );
     }
   }
 
-  // function tables(){
-
-  // }
-
-  function countryHistoricalChart() {
-    var date = Object.keys(XHistoryStats.timeline.cases);
-    var data1 = Object.values(XHistoryStats.timeline.cases);
-    var data2 = Object.values(XHistoryStats.timeline.deaths);
-    var data3 = Object.values(XHistoryStats.timeline.recovered);
+  countryHistoricalChart() {
+    var date = Object.keys(this.state.XHistoryStats.timeline.cases);
+    var data1 = Object.values(this.state.XHistoryStats.timeline.cases);
+    var data2 = Object.values(this.state.XHistoryStats.timeline.deaths);
+    var data3 = Object.values(this.state.XHistoryStats.timeline.recovered);
     var config = {
       type: "line",
       data: {
@@ -502,7 +512,8 @@ console.log(XVaccineStats);
         aspectRatio: 1.5,
         legend: {
           labels: {
-            usePointStyle: true},
+            usePointStyle: true,
+          },
           display: true,
           position: "bottom",
         },
@@ -589,11 +600,11 @@ console.log(XVaccineStats);
     var colorNames = Object.keys(window.chartColors);
   }
 
-  function countryHistoricalLogChart() {
-    var date = Object.keys(XHistoryStats.timeline.cases);
-    var data1 = Object.values(XHistoryStats.timeline.cases);
-    var data2 = Object.values(XHistoryStats.timeline.deaths);
-    var data3 = Object.values(XHistoryStats.timeline.recovered);
+  countryHistoricalLogChart() {
+    var date = Object.keys(this.state.XHistoryStats.timeline.cases);
+    var data1 = Object.values(this.state.XHistoryStats.timeline.cases);
+    var data2 = Object.values(this.state.XHistoryStats.timeline.deaths);
+    var data3 = Object.values(this.state.XHistoryStats.timeline.recovered);
     var config = {
       type: "line",
       data: {
@@ -626,7 +637,8 @@ console.log(XVaccineStats);
         aspectRatio: 1.5,
         legend: {
           labels: {
-            usePointStyle: true},
+            usePointStyle: true,
+          },
           display: true,
           position: "bottom",
         },
@@ -707,267 +719,302 @@ console.log(XVaccineStats);
 
     var colorNames = Object.keys(window.chartColors);
   }
+  render() {
+    return (
+      <div className="container-fluid  text-center">
+        <div className="text-center">
+          <h1 class="display-4" id="title-text">
+            {this.props.XCountry}
+          </h1>
+          <hr />
+          <p id="population-text">
+            Population:{" "}
+            {this.props.XStats.population
+              ? this.props.XStats.population.toLocaleString()
+              : "unconfirmed"}
+          </p>
+          <hr />
 
+          <div className="row">
+            <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
+              <Card
+                // className={classes.root}
+                style={{ marginBottom: 10, borderTop: "#00A6B4 5px solid" }}
+              >
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="h2">
+                    Total Confirmed Cases
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    style={{ display: "inline" }}
+                  >
+                    {this.props.XStats.cases.toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{ color: "red", display: "inline", marginLeft: 10 }}
+                  >
+                    {this.props.XStats.todayCases ? "+" : null}
+                    {this.props.XStats.todayCases
+                      ? this.props.XStats.todayCases.toLocaleString()
+                      : null}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                    style={{ marginTop: 5 }}
+                  >
+                    {this.props.XStats.population
+                      ? (
+                          this.props.XStats.cases / this.props.XStats.population
+                        ).toLocaleString(undefined, {
+                          style: "percent",
+                          minimumFractionDigits: 2,
+                        }) + " of Population"
+                      : null}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
 
-  return (
-    <div className="container-fluid  text-center">
-      <div className="text-center">
-        <h1 class="display-4" id="title-text">
-          {XCountry}
+            <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
+              <Card
+                // className={classes.root}
+                style={{ marginBottom: 10, borderTop: "#C9DE00 5px solid" }}
+              >
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="h2">
+                    Total Active Cases
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    style={{ display: "inline" }}
+                  >
+                    {this.props.XStats.active.toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{
+                      color:
+                        this.props.XStats.todayCases -
+                          this.props.XStats.todayRecovered <
+                        0
+                          ? "green"
+                          : "red",
+                      display: "inline",
+                      marginLeft: 10,
+                    }}
+                  >
+                    {this.props.XStats.todayCases -
+                      this.props.XStats.todayRecovered >
+                    0
+                      ? "+" +
+                        (
+                          this.props.XStats.todayCases -
+                          this.props.XStats.todayRecovered
+                        ).toLocaleString()
+                      : ""}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                    style={{ marginTop: 5 }}
+                  >
+                    {this.props.XStats.critical
+                      ? this.props.XStats.critical.toLocaleString()
+                      : null}{" "}
+                    Remain in Critical Condition
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
+              <Card
+                // className={classes.root}
+                style={{ marginBottom: 10, borderTop: "#2FDE00 5px solid" }}
+              >
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="h2">
+                    Total Recovered
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    style={{ display: "inline" }}
+                  >
+                    {this.props.XStats.recovered.toLocaleString()}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                    style={{
+                      color: "green",
+                      display: "inline",
+                      marginLeft: 10,
+                    }}
+                  >
+                    {this.props.XStats.todayRecovered ? "+" : null}
+                    {this.props.XStats.todayRecovered
+                      ? this.props.XStats.todayRecovered.toLocaleString()
+                      : null}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                    style={{ marginTop: 5 }}
+                  >
+                    {(
+                      this.props.XStats.recovered / this.props.XStats.cases
+                    ).toLocaleString(undefined, {
+                      style: "percent",
+                      minimumFractionDigits: 2,
+                    })}{" "}
+                    of Confirmed Cases
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
+              <Card
+                // className={classes.root}
+                style={{ marginBottom: 10, borderTop: "#B21F00 5px solid" }}
+              >
+                <CardContent>
+                  <Typography gutterBottom variant="h6" component="h2">
+                    Total Deaths
+                  </Typography>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="h2"
+                    style={{ display: "inline" }}
+                  >
+                    {this.props.XStats.deaths
+                      ? this.props.XStats.deaths.toLocaleString()
+                      : "unconfirmed"}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    component="p"
+                    style={{ color: "red", display: "inline", marginLeft: 10 }}
+                  >
+                    {this.props.XStats.todayDeaths ? "+" : null}
+                    {this.props.XStats.todayDeaths
+                      ? this.props.XStats.todayDeaths.toLocaleString()
+                      : null}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    color="textSecondary"
+                    component="p"
+                    style={{ marginTop: 5 }}
+                  >
+                    {(
+                      this.props.XStats.deaths / this.props.XStats.cases
+                    ).toLocaleString(undefined, {
+                      style: "percent",
+                      minimumFractionDigits: 2,
+                    })}{" "}
+                    of Confirmed Cases
+                  </Typography>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas id="canvasCountry"></canvas>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas id="canvasCountryLog"></canvas>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+
+        {this.props.XProvinceHistory.length > 1 ? (
+          <div>
+            <this.ProvinceHeader />
+            <this.ProvinceCards />
+            <div className="row">
+              <div className="col-xs-12 col-lg-6">
+                <Card style={{ marginBottom: "10px" }}>
+                  <CardContent>
+                    <canvas id="canvasProvinceCases"></canvas>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="col-xs-12 col-lg-6">
+                <Card style={{ marginBottom: "10px" }}>
+                  <CardContent>
+                    <canvas id="canvasProvinceCasesLog"></canvas>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xs-10 offset-xs-1 col-lg-6">
+                <Card style={{ marginBottom: "10px" }}>
+                  <CardContent>
+                    <canvas id="canvasProvinceDeaths"></canvas>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="col-xs-10 offset-xs-1 col-lg-6">
+                <Card style={{ marginBottom: "10px" }}>
+                  <CardContent>
+                    <canvas id="canvasProvinceDeathsLog"></canvas>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+<hr/>
+<h1 class="display-4 text-center" id="vaccine-text"  style = {{fontSize: "3rem", margin: 25}}>
+          Vaccinations
         </h1>
         <hr />
-        <p id="population-text">
-          Population: {XStats.population? XStats.population.toLocaleString(): "unconfirmed"}
-        </p>
-        <hr />
 
-        <div className="row">
-          <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-            <Card
-              className={classes.root}
-              style={{ borderTop: "#00A6B4 5px solid" }}
-            >
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Total Confirmed Cases
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  style={{ display: "inline" }}
-                >
-                  {XStats.cases.toLocaleString()}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  style={{ color: "red", display: "inline", marginLeft: 10 }}
-                >
-                  {XStats.todayCases ? "+" : null}
-                  {XStats.todayCases
-                    ? XStats.todayCases.toLocaleString()
-                    : null}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  component="p"
-                  style={{ marginTop: 5 }}
-                >
-                  {XStats.population? (XStats.cases / XStats.population).toLocaleString(
-                    undefined,
-                    { style: "percent", minimumFractionDigits: 2 }
-                  )+ " of Population":null}
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-            <Card
-              className={classes.root}
-              style={{ borderTop: "#C9DE00 5px solid" }}
-            >
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Total Active Cases
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  style={{ display: "inline" }}
-                >
-                  {XStats.active.toLocaleString()}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  style={{
-                    color:
-                      XStats.todayCases - XStats.todayRecovered < 0
-                        ? "green"
-                        : "red",
-                    display: "inline",
-                    marginLeft: 10,
-                  }}
-                >
-                  {XStats.todayCases - XStats.todayRecovered > 0
-                    ? "+" +
-                    (
-                      XStats.todayCases - XStats.todayRecovered
-                    ).toLocaleString()
-                    : ""}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  component="p"
-                  style={{ marginTop: 5 }}
-                >
-                  {XStats.critical? XStats.critical.toLocaleString(): null} Remain in Critical
-                  Condition
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-
-          <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-            <Card
-              className={classes.root}
-              style={{ borderTop: "#2FDE00 5px solid" }}
-            >
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Total Recovered
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  style={{ display: "inline" }}
-                >
-                  {XStats.recovered.toLocaleString()}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  component="p"
-                  style={{ color: "green", display: "inline", marginLeft: 10 }}
-                >
-                  {XStats.todayRecovered ? "+" : null}
-                  {XStats.todayRecovered
-                    ? XStats.todayRecovered.toLocaleString()
-                    : null}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  component="p"
-                  style={{ marginTop: 5 }}
-                >
-                  {(XStats.recovered / XStats.cases).toLocaleString(undefined, {
-                    style: "percent",
-                    minimumFractionDigits: 2,
-                  })}{" "}
-                  of Confirmed Cases
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-          <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-            <Card
-              className={classes.root}
-              style={{ borderTop: "#B21F00 5px solid" }}
-            >
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Total Deaths
-                </Typography>
-                <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="h2"
-                  style={{ display: "inline" }}
-                >
-                  {XStats.deaths? XStats.deaths.toLocaleString(): "unconfirmed"}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  component="p"
-                  style={{ color: "red", display: "inline", marginLeft: 10 }}
-                >
-                  {XStats.todayDeaths ? "+" : null}
-                  {XStats.todayDeaths
-                    ? XStats.todayDeaths.toLocaleString()
-                    : null}
-                </Typography>
-                <Typography
-                  variant="body1"
-                  color="textSecondary"
-                  component="p"
-                  style={{ marginTop: 5 }}
-                >
-                  {(XStats.deaths / XStats.cases).toLocaleString(undefined, {
-                    style: "percent",
-                    minimumFractionDigits: 2,
-                  })}{" "}
-                  of Confirmed Cases
-                </Typography>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
         <div className="row">
           <div className="col-xs-10 offset-xs-1 col-lg-6">
             <Card style={{ marginBottom: "10px" }}>
               <CardContent>
-                <canvas id="canvasCountry"></canvas>
+                <canvas id="canvasVaccine"></canvas>
               </CardContent>
             </Card>
           </div>
-          <div className="col-xs-10 offset-xs-1 col-lg-6">
-            <Card style={{ marginBottom: "10px" }}>
-              <CardContent>
-                <canvas id="canvasCountryLog"></canvas>
-              </CardContent>
-            </Card>
-          </div>
+          {this.state.XVaccineStats ? (
+            <CountryVaccinePie
+              XVaccineStats={this.state.XVaccineStats}
+              XStats={this.props.XStats}
+            />
+          ) : null}
         </div>
       </div>
-
-      {XProvinceHistory.length > 1 ? (
-        <div>
-          <ProvinceHeader />
-          <ProvinceCards />
-          <div className="row">
-            <div className="col-xs-12 col-lg-6">
-              <Card style={{ marginBottom: "10px" }}>
-                <CardContent>
-                  <canvas id="canvasProvinceCases"></canvas>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="col-xs-12 col-lg-6">
-              <Card style={{ marginBottom: "10px" }}>
-                <CardContent>
-                  <canvas id="canvasProvinceCasesLog"></canvas>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-10 offset-xs-1 col-lg-6">
-              <Card style={{ marginBottom: "10px" }}>
-                <CardContent>
-                  <canvas id="canvasProvinceDeaths"></canvas>
-                </CardContent>
-              </Card>
-            </div>
-            <div className="col-xs-10 offset-xs-1 col-lg-6">
-              <Card style={{ marginBottom: "10px" }}>
-                <CardContent>
-                  <canvas id="canvasProvinceDeathsLog"></canvas>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-
-          <div className="row">
-            <div className="col-xs-10 offset-xs-1 col-lg-6">
-              <Card style={{ marginBottom: "10px" }}>
-                <CardContent>
-                  <canvas id="canvasVaccine"></canvas>
-                </CardContent>
-              </Card>
-            </div>
-            {/* {XVaccineStats? countryVaccinePie():null} */}
-            </div>
-        </div>
-      ) : null}
-    </div>
-  );
+    );
+  }
 }
 
 export default CountryPage;

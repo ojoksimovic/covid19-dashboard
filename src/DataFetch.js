@@ -27,7 +27,7 @@ class DataFetch extends React.Component {
             cases: null,
             casesContinents: null,
             casesCountries: null,
-            vaccineGlobal: null,
+            vaccineGlobal: null
         };
     }
 
