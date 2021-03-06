@@ -2,6 +2,7 @@ import "./index.css";
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
+import { Pie} from 'react-chartjs-2';
 import "./utils";
 import MediaCard from "./GlobalCards";
 import Card from '@material-ui/core/Card';
@@ -16,14 +17,189 @@ class GlobalGraphs extends React.Component {
     super(props);
     this.worldConfirmedChart = this.worldConfirmedChart.bind(this);
     this.worldConfirmedLogChart = this.worldConfirmedLogChart.bind(this);
+    this.worldVaccineChart = this.worldVaccineChart.bind(this);
   }
 
   componentDidMount() {
     this.worldConfirmedChart();
     this.worldConfirmedLogChart();
+    this.worldVaccineChart();
   }
 
+  worldVaccinePie() {
 
+      let labelVaccine = ["Vaccinated", "Not Vaccinated"];
+      var vac = Object.values(this.props.vaccineGlobal).sort();
+      let totalVaccinated = (vac[vac.length-1]);
+      let totalUnVaccinated = (this.props.cases.population - totalVaccinated);
+      let arrayVaccinated = [totalVaccinated, totalUnVaccinated];
+      let percentVaccinated = (totalVaccinated/this.props.cases.population).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})
+  
+      return (
+          <Card style = {{marginBottom: "10px"}}><CardContent>
+          <Pie
+            data={{
+              labels: labelVaccine,
+              datasets: [
+                {
+                  label: 'Vaccinated',
+                  backgroundColor: [
+                      'rgb(54, 162, 235)',
+                      'rgb(255, 99, 132)'
+                  ],
+                  hoverBackgroundColor: [
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 99, 132)'
+                  ],
+                  data: arrayVaccinated
+                }
+              ]
+            }}
+            options={{
+              title: {
+                display: true,
+                text: percentVaccinated + " of Global Population Vaccinated",
+                fontSize: 20
+              },
+              legend: {
+                labels: {
+                  usePointStyle: true
+              },
+                display: true,
+                position: 'right'
+              },
+              tooltips: {
+                callbacks: {
+                  label: function(tooltipItem, data) {
+                    var dataLabel = data.labels[tooltipItem.index];
+                    var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
+          
+                    if (Chart.helpers.isArray(dataLabel)) {
+                      dataLabel = dataLabel.slice();
+                      dataLabel[0] += value;
+                    } else {
+                      dataLabel += value;
+                    }
+                    return dataLabel;
+                  }
+                }
+            }
+             }}
+          />
+          </CardContent></Card>
+
+      )}
+
+  worldVaccineChart() {
+
+    var date = Object.keys(this.props.vaccineGlobal);
+    var data1 = Object.values(this.props.vaccineGlobal);
+    var config = {
+      type: "line",
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Vaccines Administered",
+            backgroundColor: "#00A6B4",
+            borderColor: "#00A6B4",
+            data: data1,
+            fill: false,
+          }
+        ],
+      },
+      options: {
+        aspectRatio: 1.5,
+        legend: {
+          labels: {
+            usePointStyle: true,
+          },
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: false,
+          text: "Vaccines Administered",
+          fontSize: 20,
+        },
+        tooltips: {
+          mode: "index",
+          intersect: false,
+          callbacks: {
+            label: function (tooltipItem, data) {
+              var dataLabel = data.labels[tooltipItem.index];
+              var value =
+                ": " +
+                data.datasets[tooltipItem.datasetIndex].data[
+                  tooltipItem.index
+                ].toLocaleString();
+
+              if (Chart.helpers.isArray(dataLabel)) {
+                dataLabel = dataLabel.slice();
+                dataLabel[0] += value;
+              } else {
+                dataLabel += value;
+              }
+              return dataLabel;
+            },
+          },
+        },
+        hover: {
+          mode: "nearest",
+          intersect: true,
+        },
+        scales: {
+          xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              type: "time",
+              time: {
+                unit: "day",
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+          ],
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                userCallback: function (value, index, values) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(",");
+                  return value;
+                },
+              },
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Vaccines Administered",
+              },
+            },
+          ],
+        },
+      },
+    };
+    var ctx = document.getElementById("canvasVaccine").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
+  
   worldConfirmedChart() {
     var date = Object.keys(this.props.historyGlobal.cases);
     var data1 = Object.values(this.props.historyGlobal.cases);
@@ -296,8 +472,28 @@ class GlobalGraphs extends React.Component {
             </div>
           </div>
           <hr />
+
           <ContinentCards casesContinents={this.props.casesContinents} />
           <ContinentCharts casesContinents={this.props.casesContinents} />
+          
+          <h1 class="display-4 text-center" id="vaccine-text"  style = {{fontSize: "3rem", margin: 25}}>
+          Global COVID-19 Vaccines
+        </h1>
+        <hr />
+          <div className="row">
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas aspectRatio="1" id="canvasVaccine"></canvas>
+                </CardContent>
+              </Card>
+            </div>
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              {this.worldVaccinePie()}
+              </div>
+            </div>
+            <hr/>
+
           <TopCountryCard
             casesCountries={this.props.casesCountries}
             cases={this.props.cases}

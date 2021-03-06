@@ -1,7 +1,8 @@
 import "./index.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
+import { Pie} from 'react-chartjs-2';
 import "./utils";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -45,6 +46,7 @@ let date = [];
 function CountryPage({ XStats, XProvinceHistory, XCountry }) {
   const classes = useStyles();
   let XHistoryStats;
+  let XVaccineStats;
 
   useEffect(() => {
     fetchCountryData();
@@ -54,15 +56,204 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
   function fetchCountryData() {
     let countryURL =
       "https://disease.sh/v3/covid-19/historical/" + XCountry + "?lastdays=all";
-    axios.all([axios.get(countryURL)]).then(
-      axios.spread((req1) => {
+    let vaccineCountryURL = "https://disease.sh/v3/covid-19/vaccine/coverage/countries/"+ XCountry + "?lastdays=all"
+      axios.all([
+      axios.get(countryURL),
+      axios.get(vaccineCountryURL)
+    ]).then(
+      axios.spread((req1, req2) => {
         XHistoryStats = req1.data;
+        XVaccineStats = req2.data.timeline;
         countryHistoricalChart();
         countryHistoricalLogChart();
+        // countryVaccineChart();
         provinceData();
+        // pieData();
       })
     );
   }
+
+
+// function pieData(){
+//   labelVaccine = ["Vaccinated", "Not Vaccinated"];
+//   var vac = Object.values(XVaccineStats).sort()
+//   let totalVaccinated = (vac[vac.length-1]);
+//   let totalUnVaccinated = (XStats.population - totalVaccinated);
+//   arrayVaccinated = [totalVaccinated, totalUnVaccinated];
+//   percentVaccinated = (totalVaccinated/XStats.population).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})
+// }
+
+
+
+//  function countryVaccinePie() {
+
+//     return (
+//       <div className="col-xs-10 offset-xs-1 col-lg-6">
+
+//         <Card style = {{marginBottom: "10px"}}><CardContent>
+//         <Pie
+//           data={{
+//             labels: labelVaccine,
+//             datasets: [
+//               {
+//                 label: 'Vaccinated',
+//                 backgroundColor: [
+//                     'rgb(54, 162, 235)',
+//                     'rgb(255, 99, 132)'
+//                 ],
+//                 hoverBackgroundColor: [
+//                   'rgb(54, 162, 235)',
+//                   'rgb(255, 99, 132)'
+//                 ],
+//                 data: arrayVaccinated
+//               }
+//             ]
+//           }}
+//           options={{
+//             title: {
+//               display: true,
+//               text: percentVaccinated + " of Population Vaccinated",
+//               fontSize: 20
+//             },
+//             legend: {
+//               labels: {
+//                 usePointStyle: true
+//             },
+//               display: true,
+//               position: 'right'
+//             },
+//             tooltips: {
+//               callbacks: {
+//                 label: function(tooltipItem, data) {
+//                   var dataLabel = data.labels[tooltipItem.index];
+//                   var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index].toLocaleString();
+        
+//                   if (Chart.helpers.isArray(dataLabel)) {
+//                     dataLabel = dataLabel.slice();
+//                     dataLabel[0] += value;
+//                   } else {
+//                     dataLabel += value;
+//                   }
+//                   return dataLabel;
+//                 }
+//               }
+//           }
+//            }}
+//         />
+//         </CardContent></Card>
+        
+//       </div>
+//     )}
+
+function countryVaccineChart() {
+console.log(XVaccineStats);
+  var date = Object.keys(XVaccineStats);
+  var data1 = Object.values(XVaccineStats);
+  var config = {
+    type: "line",
+    data: {
+      labels: date,
+      datasets: [
+        {
+          label: "Vaccines Administered",
+          backgroundColor: "#00A6B4",
+          borderColor: "#00A6B4",
+          data: data1,
+          fill: false,
+        }
+      ],
+    },
+    options: {
+      aspectRatio: 1.5,
+      legend: {
+        labels: {
+          usePointStyle: true,
+        },
+        display: false,
+        position: "bottom",
+      },
+      responsive: true,
+      title: {
+        display: false,
+        text: "Vaccines Administered",
+        fontSize: 20,
+      },
+      tooltips: {
+        mode: "index",
+        intersect: false,
+        callbacks: {
+          label: function (tooltipItem, data) {
+            var dataLabel = data.labels[tooltipItem.index];
+            var value =
+              ": " +
+              data.datasets[tooltipItem.datasetIndex].data[
+                tooltipItem.index
+              ].toLocaleString();
+
+            if (Chart.helpers.isArray(dataLabel)) {
+              dataLabel = dataLabel.slice();
+              dataLabel[0] += value;
+            } else {
+              dataLabel += value;
+            }
+            return dataLabel;
+          },
+        },
+      },
+      hover: {
+        mode: "nearest",
+        intersect: true,
+      },
+      scales: {
+        xAxes: [
+          {
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              drawOnChartArea: false,
+            },
+            display: true,
+            type: "time",
+            time: {
+              unit: "day",
+            },
+            scaleLabel: {
+              display: true,
+              labelString: "Time",
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              userCallback: function (value, index, values) {
+                value = value.toString();
+                value = value.split(/(?=(?:...)*$)/);
+                value = value.join(",");
+                return value;
+              },
+            },
+            gridLines: {
+              display: true,
+              drawBorder: true,
+              drawOnChartArea: false,
+            },
+            display: true,
+            scaleLabel: {
+              display: true,
+              labelString: "Vaccines Administered",
+            },
+          },
+        ],
+      },
+    },
+  };
+  var ctx = document.getElementById("canvasVaccine").getContext("2d");
+  window.myLine = new Chart(ctx, config);
+
+  var colorNames = Object.keys(window.chartColors);
+}
 
   function capitalizeFirstLetter(mySentence) {
     const words = mySentence.split(" ");
@@ -267,7 +458,6 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
       provinceChart(provinceCasesData, "Cases (Log)", "canvasProvinceCasesLog", "logarithmic");
       provinceChart(provinceDeathsData, "Deaths", "canvasProvinceDeaths", "linear");
       provinceChart(provinceDeathsData, "Deaths (Log)", "canvasProvinceDeathsLog", "logarithmic");
-      console.log(provinceCasesData[0].data[provinceCasesData[0].data.length - 1])
     }
   }
 
@@ -763,6 +953,17 @@ function CountryPage({ XStats, XProvinceHistory, XCountry }) {
               </Card>
             </div>
           </div>
+
+          <div className="row">
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+              <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas id="canvasVaccine"></canvas>
+                </CardContent>
+              </Card>
+            </div>
+            {/* {XVaccineStats? countryVaccinePie():null} */}
+            </div>
         </div>
       ) : null}
     </div>

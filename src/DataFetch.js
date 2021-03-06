@@ -26,7 +26,8 @@ class DataFetch extends React.Component {
             historyCountries: null,
             cases: null,
             casesContinents: null,
-            casesCountries: null
+            casesCountries: null,
+            vaccineGlobal: null,
         };
     }
 
@@ -36,15 +37,17 @@ class DataFetch extends React.Component {
             axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all'),
             axios.get('https://disease.sh/v3/covid-19/historical?lastdays=all'),
             axios.get('https://disease.sh/v3/covid-19/continents?yesterday=false&twoDaysAgo=false&allowNull=true'),
-            axios.get('https://disease.sh/v3/covid-19/countries?yesterday=false&twoDaysAgo=false&sort=cases&allowNull=true')
+            axios.get('https://disease.sh/v3/covid-19/countries?yesterday=false&twoDaysAgo=false&sort=cases&allowNull=true'),
+            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=all')
         ])
-            .then(axios.spread((req1, req2, req3, req4, req5) => {
+            .then(axios.spread((req1, req2, req3, req4, req5, req6) => {
                 this.setState({
                     cases: req1.data,
                     historyGlobal: req2.data,
                     historyCountries: req3.data,
                     casesContinents: req4.data,
-                    casesCountries: req5.data
+                    casesCountries: req5.data,
+                    vaccineGlobal: req6.data
                 });
             }));
     }
@@ -137,6 +140,7 @@ CountryName(props) {
                                 casesContinents={this.state.casesContinents}
                                 historyGlobal={this.state.historyGlobal}
                                 historyCountries={this.state.historyCountries}
+                                vaccineGlobal={this.state.vaccineGlobal}
                             />} />
               <Route path="/search" component={this.CountryList} />
               <Route path="/compare" component={this.ComparePageList} />
