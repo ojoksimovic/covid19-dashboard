@@ -11,7 +11,8 @@ import ContinentCharts from "./ContinentCharts";
 import ContinentCards from "./ContinentCards";
 import GlobalTable from "./GlobalTable";
 import TopCountryCard from "./TopCountryCard";
-import Footer from './Footer';
+import Footer from "./Footer";
+import EnhancedTable from "./MUIGlobalTable";
 
 let backGroundColorArray = [
   "rgb(255, 99, 132)",
@@ -824,11 +825,11 @@ class GlobalGraphs extends React.Component {
             casesCountries={this.props.casesCountries}
             cases={this.props.cases}
           />
-          <GlobalTable
+          <EnhancedTable
             casesCountries={this.props.casesCountries}
             vaccineCountries={this.props.vaccineCountries}
           />
-          <Footer cases = {this.props.cases}/>
+          <Footer cases={this.props.cases} />
         </div>
       </div>
     );
