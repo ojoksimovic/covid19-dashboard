@@ -56,10 +56,10 @@ function getComparisonData(value){
   
 }
   return (
-    <div className="container-fluid text-center">
+    <div className="container-fluid">
     <div className="row">
       <div className="col-12">
-        <h1 class="display-4" id="title-text">
+        <h1 class="display-4 text-center" id="title-text">
           Compare
     </h1>
       </div>
