@@ -10,6 +10,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
 import CountryVaccinePie from "./CountryVaccinePie";
+import Footer from "./Footer";
 
 const useStyles = makeStyles({
   root: {
@@ -42,6 +43,7 @@ let colourThemeArray = [
 let provinceCasesData = [];
 let provinceDeathsData = [];
 let date = [];
+let data1;
 
 // import colourThemeArray from "./ColourTheme"
 
@@ -52,6 +54,7 @@ class CountryPage extends React.Component {
     this.fetchCountryData = this.fetchCountryData.bind(this);
     this.countryHistoricalChart = this.countryHistoricalChart.bind(this);
     this.countryVaccineChart = this.countryVaccineChart.bind(this);
+    this.countryVaccineChartData = this.countryVaccineChartData.bind(this);
     this.countryHistoricalLogChart = this.countryHistoricalLogChart.bind(this);
     this.provinceData = this.provinceData.bind(this);
     this.ProvinceCards = this.ProvinceCards.bind(this);
@@ -60,6 +63,7 @@ class CountryPage extends React.Component {
     this.state = {
       XVaccineStats: null,
       XHistoryStats: null,
+      VaccineInfo: null,
     };
   }
 
@@ -72,29 +76,37 @@ class CountryPage extends React.Component {
       "https://disease.sh/v3/covid-19/historical/" +
       this.props.XCountry +
       "?lastdays=all";
-    let vaccineCountryURL =
-      "https://disease.sh/v3/covid-19/vaccine/coverage/countries/" +
-      this.props.XCountry +
-      "?lastdays=all";
-    axios.all([axios.get(countryURL), axios.get(vaccineCountryURL)]).then(
-      axios.spread((req1, req2) => {
+    axios.all([axios.get(countryURL)]).then(
+      axios.spread((req1) => {
         this.setState({
           XHistoryStats: req1.data,
-          XVaccineStats: req2.data.timeline,
         });
 
         this.countryHistoricalChart();
         this.countryHistoricalLogChart();
-        this.countryVaccineChart();
+        this.countryVaccineChartData();
         this.provinceData();
       })
     );
   }
 
+  countryVaccineChartData(){
+    for (let i = 0; i < this.props.XVaccineCountries.length; i++) {
+      if (this.props.XVaccineCountries[i]["country"] == this.props.XCountry){
+        date = Object.keys(this.props.XVaccineCountries[i]["timeline"]);
+        data1 = Object.values(this.props.XVaccineCountries[i]["timeline"]);
+        this.setState({
+          VaccineInfo: "Available"
+        });
+      }
+      
+            }
+            this.countryVaccineChart();
+            
+  }
+
   countryVaccineChart() {
-    console.log(this.state.XVaccineStats);
-    var date = Object.keys(this.state.XVaccineStats);
-    var data1 = Object.values(this.state.XVaccineStats);
+    if (this.state.VaccineInfo != null){ 
     var config = {
       type: "line",
       data: {
@@ -199,6 +211,7 @@ class CountryPage extends React.Component {
     window.myLine = new Chart(ctx, config);
 
     var colorNames = Object.keys(window.chartColors);
+    }
   }
 
   capitalizeFirstLetter(mySentence) {
@@ -991,6 +1004,8 @@ class CountryPage extends React.Component {
           </div>
         ) : null}
 
+{this.state.VaccineInfo ?
+<div>
 <hr/>
 <h1 class="display-4 text-center" id="vaccine-text"  style = {{fontSize: "3rem", margin: 25}}>
           Vaccinations
@@ -1005,13 +1020,24 @@ class CountryPage extends React.Component {
               </CardContent>
             </Card>
           </div>
-          {this.state.XVaccineStats ? (
+          
             <CountryVaccinePie
-              XVaccineStats={this.state.XVaccineStats}
+              XVaccineCountries={this.props.XVaccineCountries}
               XStats={this.props.XStats}
+              XCountry = {this.props.XCountry}
             />
-          ) : null}
+            
         </div>
+      </div> 
+      : 
+      <div>
+        <hr/>
+<h1 class="display-4 text-center" id="vaccine-text"  style = {{fontSize: "3rem", margin: 25}}>
+          Vaccination Data Currently Unavailable
+        </h1>
+        </div>
+        }
+      <Footer cases = {this.props.cases}/>
       </div>
     );
   }

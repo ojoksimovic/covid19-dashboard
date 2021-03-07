@@ -137,7 +137,6 @@ export default function CompareTable({ casesCountries, vaccineCountries }) {
                     options={options} />
 
             </div>
-            <hr />
         </div>
     );
 

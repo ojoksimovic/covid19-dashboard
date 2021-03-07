@@ -8,9 +8,9 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 
 
- function CountryVaccinePie({XVaccineStats, XStats}) {
-console.log(XVaccineStats);
-    if (XVaccineStats == null){
+ function CountryVaccinePie({XVaccineCountries, XCountry, XStats}) {
+console.log(XVaccineCountries);
+    if (XVaccineCountries == null){
         return (
             <div class="text-center">
 
@@ -22,8 +22,17 @@ console.log(XVaccineStats);
         )
     }
       let labelVaccine = ["Vaccinated", "Not Vaccinated"];
-      var vac = Object.values(XVaccineStats).sort()
-      let totalVaccinated = (vac[vac.length-1]);
+
+      let vac;
+      let totalVaccinated;
+
+      for (let i = 0; i < XVaccineCountries.length; i++) {
+        if (XVaccineCountries[i]["country"] == XCountry){
+          vac = Object.values(XVaccineCountries[i]["timeline"]).sort();
+          totalVaccinated = vac[vac.length - 1];
+        }
+              }
+
       let totalUnVaccinated = (XStats.population - totalVaccinated);
       let arrayVaccinated = [totalVaccinated, totalUnVaccinated];
       let percentVaccinated = (totalVaccinated/XStats.population).toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2})

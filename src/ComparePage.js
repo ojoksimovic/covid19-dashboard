@@ -8,11 +8,12 @@ import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import CompareGraphs from './CompareGraphs';
 import CompareTable from './CompareTable';
 import axios from 'axios';
+import Footer from './Footer';
 
 const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
 const checkedIcon = <CheckBoxIcon fontSize="small" />;
 
-export default function ComparePage({countryList, casesCountries, vaccineCountries}) {
+export default function ComparePage({countryList, casesCountries, vaccineCountries, cases}) {
 
  let historyCountries;
 
@@ -100,6 +101,7 @@ function getComparisonData(value){
     casesCountries = {compareTableData} vaccineCountries = {vaccineCountries}/>
     </div>
     :null}
+    <Footer cases = {cases}/>
     </div>
   );
 }

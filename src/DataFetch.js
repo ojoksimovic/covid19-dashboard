@@ -83,6 +83,7 @@ CountryName(props) {
     XProvinceHistory = {XProvinceHistory}
     XCountry = {XCountry}
     XVaccineCountries = {this.state.vaccineCountries}
+    cases={this.state.cases}
     />
   }
   CountryList(){
@@ -96,6 +97,7 @@ CountryName(props) {
     console.log(countryList);
     return <SearchPage
     countryList = {countryList}
+    cases={this.state.cases}
     />
   }
 
@@ -114,6 +116,7 @@ CountryName(props) {
   casesCountries = {this.state.casesCountries}
   historyCountries = {this.state.historyCountries}
   vaccineCountries = {this.state.vaccineCountries}
+  cases={this.state.cases}
   />
 }
 

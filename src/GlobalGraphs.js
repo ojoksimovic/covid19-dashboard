@@ -11,6 +11,7 @@ import ContinentCharts from "./ContinentCharts";
 import ContinentCards from "./ContinentCards";
 import GlobalTable from "./GlobalTable";
 import TopCountryCard from "./TopCountryCard";
+import Footer from './Footer';
 
 let backGroundColorArray = [
   "rgb(255, 99, 132)",
@@ -827,21 +828,7 @@ class GlobalGraphs extends React.Component {
             casesCountries={this.props.casesCountries}
             vaccineCountries={this.props.vaccineCountries}
           />
-          <div className="row">
-            <div className="col-12 text-center">
-              <p style={{ textAlign: "center", fontSize: "1rem" }}>
-                Last Updated: {new Date(this.props.cases["updated"]).toString()}
-              </p>
-            </div>
-
-            <div className="col-12 text-center">
-              <hr />
-              <p id="olivera" style={{ textAlign: "center", fontSize: "1rem" }}>
-                developed by <a href="https://www.olivera.tech">olivera.tech</a>
-              </p>
-            </div>
-          </div>
-          {/* <CanadaGraph historyConfirmed = {this.state.historyConfirmed} /> */}
+          <Footer cases = {this.props.cases}/>
         </div>
       </div>
     );

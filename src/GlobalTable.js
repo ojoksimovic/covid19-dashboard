@@ -166,7 +166,6 @@ export default class GlobalTable extends React.Component {
             options={options}
           />
         </div>
-        <hr />
       </div>
     );
   }
