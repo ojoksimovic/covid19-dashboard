@@ -725,22 +725,22 @@ class CountryPage extends React.Component {
         datasets: [
           {
             label: "Cases",
-            backgroundColor: "#00A6B4",
-            borderColor: "#00A6B4",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
             data: data1,
             fill: false,
           },
           {
             label: "Deaths",
-            backgroundColor: "#B21F00",
-            borderColor: "#B21F00",
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
             data: data2,
             fill: false,
           },
           {
             label: "Recovered",
-            backgroundColor: "#2FDE00",
-            borderColor: "#2FDE00",
+            backgroundColor: "rgb(75, 192, 192)",
+            borderColor: "rgb(75, 192, 192)",
             data: data3,
             fill: false,
           },
@@ -850,22 +850,22 @@ class CountryPage extends React.Component {
         datasets: [
           {
             label: "Global",
-            backgroundColor: "#00A6B4",
-            borderColor: "#00A6B4",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
             data: data1,
             fill: false,
           },
           {
             label: "Deaths",
-            backgroundColor: "#B21F00",
-            borderColor: "#B21F00",
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
             data: data2,
             fill: false,
           },
           {
             label: "Recovered",
-            backgroundColor: "#2FDE00",
-            borderColor: "#2FDE00",
+            backgroundColor: "rgb(75, 192, 192)",
+            borderColor: "rgb(75, 192, 192)",
             data: data3,
             fill: false,
           },
@@ -977,7 +977,7 @@ class CountryPage extends React.Component {
             <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
               <Card
                 // className={classes.root}
-                style={{ marginBottom: 10, borderTop: "#00A6B4 5px solid" }}
+                style={{ marginBottom: 10, borderTop: "rgb(54, 162, 235) 5px solid" }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="h2">
@@ -1023,7 +1023,7 @@ class CountryPage extends React.Component {
             <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
               <Card
                 // className={classes.root}
-                style={{ marginBottom: 10, borderTop: "#C9DE00 5px solid" }}
+                style={{ marginBottom: 10, borderTop: "rgb(255, 205, 86) 5px solid" }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="h2">
@@ -1079,7 +1079,7 @@ class CountryPage extends React.Component {
             <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
               <Card
                 // className={classes.root}
-                style={{ marginBottom: 10, borderTop: "#2FDE00 5px solid" }}
+                style={{ marginBottom: 10, borderTop: "rgb(75, 192, 192) 5px solid" }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="h2">
@@ -1128,7 +1128,7 @@ class CountryPage extends React.Component {
             <div className="col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
               <Card
                 // className={classes.root}
-                style={{ marginBottom: 10, borderTop: "#B21F00 5px solid" }}
+                style={{ marginBottom: 10, borderTop: "rgb(255, 99, 132) 5px solid" }}
               >
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="h2">

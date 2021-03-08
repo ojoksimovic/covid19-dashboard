@@ -18,13 +18,11 @@ const useStyles = makeStyles({
 export default function MediaCard({data}) {
   const classes = useStyles();
 
-        
-
   return (
     <div>
       <div className = "row">
       <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-    <Card className={classes.root} style = {{borderTop: "#00A6B4 5px solid"}}>
+    <Card className={classes.root} style = {{borderTop: "rgb(54, 162, 235) 5px solid"}}>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -37,7 +35,7 @@ export default function MediaCard({data}) {
           <Typography gutterBottom variant="h5" component="h2" style={{display: "inline"}}>
             {data.cases.toLocaleString()}
           </Typography>
-          <Typography variant="body1" component="p" style={{color: "red", display: "inline", marginLeft: 10}}>
+          <Typography variant="body1" component="p" color= "secondary" style={{display: "inline", marginLeft: 10}}>
           +{data.todayCases.toLocaleString()}
           </Typography>
           <Typography variant="body1" color="textSecondary" component="p" style={{marginTop: 5}}>
@@ -48,7 +46,7 @@ export default function MediaCard({data}) {
     </div>
 
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-    <Card className={classes.root} style = {{borderTop: "#C9DE00 5px solid"}}>
+    <Card className={classes.root} style = {{borderTop: "rgb(255, 205, 86) 5px solid"}}>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -72,7 +70,7 @@ export default function MediaCard({data}) {
     </div>
 
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-    <Card className={classes.root} style = {{borderTop: "#2FDE00 5px solid"}}>
+    <Card className={classes.root} style = {{borderTop: "rgb(75, 192, 192) 5px solid"}}>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -95,7 +93,7 @@ export default function MediaCard({data}) {
     </Card>
     </div>
     <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-    <Card className={classes.root} style = {{borderTop: "#B21F00 5px solid"}}>
+    <Card className={classes.root} style = {{borderTop: "rgb(255, 99, 132) 5px solid"}}>
         <CardMedia
           className={classes.media}
           image = './Coronavirus_3D_illustration_by_CDC_1600x900.png'
@@ -108,7 +106,7 @@ export default function MediaCard({data}) {
           <Typography gutterBottom variant="h5" component="h2" style={{display: "inline"}}>
             {data.deaths.toLocaleString()}
           </Typography>
-          <Typography variant="body1" component="p" style={{color: "red", display: "inline", marginLeft: 10}}>
+          <Typography variant="body1" component="p" color="secondary" style={{display: "inline", marginLeft: 10}}>
           +{data.todayDeaths.toLocaleString()}
           </Typography>
           <Typography variant="body1" color="textSecondary" component="p" style={{marginTop: 5}}>

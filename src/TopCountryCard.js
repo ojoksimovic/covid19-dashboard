@@ -60,7 +60,7 @@ class TopCountryCard extends React.Component {
     for (let i = 0; i < labelCountry.length; i++) {
       countryCards[i] = (
         <div className = "col-xs-8 offset-xs-2 col-sm-6 col-lg-3">
-    <Card className={classes.root} style = {{marginBottom: 10, borderTop: "#B21F00 5px solid"}}>
+    <Card className={classes.root} style = {{marginBottom: 10, borderTop: "rgb(255, 99, 132) 5px solid"}}>
       <CardActionArea>
         <Link style = {{textDecoration:"none", color:"black"}}to={"/country/"+labelCountry[i]}>
         <CardMedia

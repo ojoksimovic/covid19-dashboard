@@ -129,14 +129,14 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{ 'aria-label': 'select all desserts' }}
           />
-        </TableCell>
+        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -213,7 +213,7 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
       )}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton aria-label="delete">
             <DeleteIcon />
@@ -225,7 +225,7 @@ const EnhancedTableToolbar = (props) => {
             <FilterListIcon />
           </IconButton>
         </Tooltip>
-      )}
+      )} */}
     </Toolbar>
   );
 };
@@ -384,18 +384,19 @@ export default function EnhancedTable({casesCountries, vaccineCountries}) {
                     <TableRow
                       hover
                       onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
+                      // role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row.name}
                       selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
+                      {/* <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
-                        </TableCell>
+                        </TableCell> */}
+                        
 
 {headCells.map((column) => {
                     const value = row[column.id];
