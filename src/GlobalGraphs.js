@@ -273,7 +273,7 @@ class GlobalGraphs extends React.Component {
 
   worldVaccinePie() {
     let labelVaccine = ["Vaccinated", "Not Vaccinated"];
-    var vac = Object.values(this.props.vaccineGlobal).sort();
+    var vac = Object.values(this.props.vaccineGlobal);
     let totalVaccinated = vac[vac.length - 1];
     let totalUnVaccinated = this.props.cases.population - totalVaccinated;
     let arrayVaccinated = [totalVaccinated, totalUnVaccinated];

@@ -28,7 +28,7 @@ console.log(XVaccineCountries);
 
       for (let i = 0; i < XVaccineCountries.length; i++) {
         if (XVaccineCountries[i]["country"] == XCountry){
-          vac = Object.values(XVaccineCountries[i]["timeline"]).sort();
+          vac = Object.values(XVaccineCountries[i]["timeline"]);
           totalVaccinated = vac[vac.length - 1];
         }
               }
