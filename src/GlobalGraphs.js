@@ -345,7 +345,7 @@ class GlobalGraphs extends React.Component {
     let vaccineNumber;
 
     for (let i = 0; i < this.props.vaccineCountries.length; i++) {
-      vacn = Object.values(this.props.vaccineCountries[i]["timeline"]).sort();
+      vacn = Object.values(this.props.vaccineCountries[i]["timeline"]);
       vaccineNumber = vacn[vacn.length - 1];
       if (vaccineNumber > 0) {
         vaccineArray[this.props.vaccineCountries[i].country] = vaccineNumber;
