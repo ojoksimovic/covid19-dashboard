@@ -9,7 +9,7 @@ export default class GlobalTable extends React.Component {
     let vaccineNumber;
 
     for (let i = 0; i < this.props.vaccineCountries.length; i++) {
-      vac = Object.values(this.props.vaccineCountries[i]["timeline"]).sort();
+      vac = Object.values(this.props.vaccineCountries[i]["timeline"]);
       vaccineNumber = vac[vac.length - 1];
       vaccineArray[this.props.vaccineCountries[i].country] = vaccineNumber;
     }

@@ -272,7 +272,7 @@ export default function EnhancedTable({casesCountries, vaccineCountries}) {
   let vaccineNumber;
 
   for (let i = 0; i < vaccineCountries.length; i++) {
-    vac = Object.values(vaccineCountries[i]["timeline"]).sort();
+    vac = Object.values(vaccineCountries[i]["timeline"]);
     vaccineNumber = vac[vac.length - 1];
     vaccineArray[vaccineCountries[i].country] = vaccineNumber;
   }
