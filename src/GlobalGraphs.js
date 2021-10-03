@@ -274,7 +274,7 @@ class GlobalGraphs extends React.Component {
   worldVaccinePie() {
     let labelVaccine = ["Vaccinated", "Not Vaccinated"];
     var vac = Object.values(this.props.vaccineGlobal);
-    let totalVaccinated = vac[vac.length - 1];
+    let totalVaccinated = vac[vac.length - 1]/2;
     let totalUnVaccinated = this.props.cases.population - totalVaccinated;
     let arrayVaccinated = [totalVaccinated, totalUnVaccinated];
     let percentVaccinated = (
@@ -302,7 +302,7 @@ class GlobalGraphs extends React.Component {
             options={{
               title: {
                 display: true,
-                text: percentVaccinated + " of Global Population Vaccinated",
+                text: percentVaccinated + " of Global Population Vaccinated (assuming double dose)",
                 fontSize: 20,
               },
               legend: {

@@ -29,7 +29,7 @@ console.log(XVaccineCountries);
       for (let i = 0; i < XVaccineCountries.length; i++) {
         if (XVaccineCountries[i]["country"] == XCountry){
           vac = Object.values(XVaccineCountries[i]["timeline"]);
-          totalVaccinated = vac[vac.length - 1];
+          totalVaccinated = vac[vac.length - 1]/2;
         }
               }
 
@@ -62,7 +62,7 @@ console.log(XVaccineCountries);
             options={{
               title: {
                 display: true,
-                text: percentVaccinated + " of Population Vaccinated",
+                text: percentVaccinated + " of Population Vaccinated (assuming double dose)",
                 fontSize: 20
               },
               legend: {

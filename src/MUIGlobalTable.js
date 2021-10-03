@@ -113,7 +113,7 @@ var headCells = [
   },
   {
     id: "percentVaccinated",
-    label: "Population Vaccinated",
+    label: "Population Vaccinated (assuming double dose)",
     align: "right",
     format: (value) => (value ? value.toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}) : null),
   },
@@ -296,7 +296,7 @@ export default function EnhancedTable({casesCountries, vaccineCountries}) {
       testsPerOneMillion: casesCountries[i]["testsPerOneMillion"],
       population: casesCountries[i]["population"],
       vaccinesAdministered: vaccineNumber,
-      percentVaccinated: (vaccineNumber/casesCountries[i]["population"])
+      percentVaccinated: ((0.5*vaccineNumber)/casesCountries[i]["population"])
     });
   }
 
