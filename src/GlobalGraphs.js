@@ -13,6 +13,8 @@ import GlobalTable from "./GlobalTable";
 import TopCountryCard from "./TopCountryCard";
 import Footer from "./Footer";
 import EnhancedTable from "./MUIGlobalTable";
+import { Tabs, Tab } from "@material-ui/core";
+
 
 let backGroundColorArray = [
   "rgb(255, 99, 132)",
@@ -263,11 +265,21 @@ class GlobalGraphs extends React.Component {
     this.worldConfirmedChart = this.worldConfirmedChart.bind(this);
     this.worldConfirmedLogChart = this.worldConfirmedLogChart.bind(this);
     this.worldVaccineChart = this.worldVaccineChart.bind(this);
-  }
+    this.worldDailyChart = this.worldDailyChart.bind(this);
+    this.worldDailyDeathChart = this.worldDailyDeathChart.bind(this);
+
+    this.state = {
+      tabValue: 0,
+      totalTabValue: 0,
+    };
+
+}
 
   componentDidMount() {
     this.worldConfirmedChart();
     this.worldConfirmedLogChart();
+    this.worldDailyChart();
+    this.worldDailyDeathChart();
     this.worldVaccineChart();
   }
 
@@ -518,6 +530,8 @@ class GlobalGraphs extends React.Component {
     var colorNames = Object.keys(window.chartColors);
   }
 
+
+
   worldConfirmedChart() {
     var date = Object.keys(this.props.historyGlobal.cases);
     var data1 = Object.values(this.props.historyGlobal.cases);
@@ -763,6 +777,179 @@ class GlobalGraphs extends React.Component {
     var colorNames = Object.keys(window.chartColors);
   }
 
+  worldDailyChart() {
+
+    var date = Object.keys(this.props.historyGlobal.cases);
+    var data1 = []
+    for (let i = 0; i < date.length; i++){
+      data1.push(this.props.historyGlobal.cases[date[i]]- this.props.historyGlobal.cases[date[i-1]])
+    }
+
+var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Cases",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
+            data: data1,
+          },
+        ],
+      },
+    options: {
+      aspectRatio: 1.5,
+      responsive: true,
+        legend: {
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Cases",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}
+
+    var ctx = document.getElementById("canvasWorldDaily").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
+
+  worldDailyDeathChart() {
+
+    var date = Object.keys(this.props.historyGlobal.cases);
+    var data1 = []
+    for (let i = 0; i < date.length; i++){
+      data1.push(this.props.historyGlobal.deaths[date[i]]- this.props.historyGlobal.deaths[date[i-1]])
+    }
+
+var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Deaths",
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
+            data: data1,
+          },
+        ],
+      },
+    options: {
+      aspectRatio: 1.5,
+      responsive: true,
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Deaths",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: "Time",
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}
+
+    var ctx = document.getElementById("canvasWorldDailyDeath").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
+
+  handleTotalChange = (event, newValue) => {
+    this.setState({
+      totalTabValue: newValue,
+    });
+  }
+
+  handleChange = (event, newValue) => {
+    this.setState({
+      tabValue: newValue,
+    });
+  }
+
   render() {
     return (
       <div>
@@ -777,17 +964,68 @@ class GlobalGraphs extends React.Component {
             <div className="col-xs-10 offset-xs-1 col-lg-6">
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
-                  <canvas aspectRatio="1" id="canvasConfirmed"></canvas>
+
+                <Tabs value={this.state.totalTabValue} onChange={this.handleTotalChange} aria-label="basic tabs example">
+          <Tab label="Cases (total)"  />
+          <Tab label="Cases (log)"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.totalTabValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasConfirmed"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.totalTabValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasConfirmedLog"></canvas>
+
+    </div>
+
                 </CardContent>
               </Card>
             </div>
-            <div className="col-xs-10 offset-xs-1 col-lg-6">
+
+            <div className= 'col-xs-10 offset-xs-1 col-lg-6'>
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
-                  <canvas id="canvasConfirmedLog"></canvas>
+                <Tabs value={this.state.tabValue} onChange={this.handleChange} aria-label="basic tabs example">
+          <Tab label="Daily Cases"  />
+          <Tab label="Daily Deaths"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.tabValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasWorldDaily"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.tabValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasWorldDailyDeath"></canvas>
+
+    </div>
+
                 </CardContent>
               </Card>
             </div>
+            
           </div>
           <hr />
 
