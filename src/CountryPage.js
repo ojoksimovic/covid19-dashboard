@@ -8,6 +8,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
+import { Tabs, Tab } from "@material-ui/core";
 import axios from "axios";
 import CountryVaccinePie from "./CountryVaccinePie";
 import Footer from "./Footer";
@@ -284,11 +285,17 @@ class CountryPage extends React.Component {
     this.provinceData = this.provinceData.bind(this);
     this.ProvinceCards = this.ProvinceCards.bind(this);
     this.ProvinceHeader = this.ProvinceHeader.bind(this);
+    this.countryHistoricalDailyDeathChart = this.countryHistoricalDailyDeathChart.bind(this);
+    this.countryHistoricalDailyChart = this.countryHistoricalDailyChart.bind(this);
 
     this.state = {
       XVaccineStats: null,
       XHistoryStats: null,
       VaccineInfo: null,
+      tabValue: 0,
+      totalTabValue:0,
+      tabProvinceValue: 0,
+      tabProvinceDeathValue: 0,
     };
   }
 
@@ -308,6 +315,8 @@ class CountryPage extends React.Component {
         });
 
         this.countryHistoricalChart();
+        this.countryHistoricalDailyChart();
+        this.countryHistoricalDailyDeathChart();
         this.countryHistoricalLogChart();
         this.countryVaccineChartData();
         this.provinceData();
@@ -838,6 +847,188 @@ class CountryPage extends React.Component {
     var colorNames = Object.keys(window.chartColors);
   }
 
+  countryHistoricalDailyChart() {
+
+    var date = Object.keys(this.state.XHistoryStats.timeline.cases);
+    var data1 = []
+    for (let i = 0; i < date.length; i++){
+      data1.push(this.state.XHistoryStats.timeline.cases[date[i]]- this.state.XHistoryStats.timeline.cases[date[i-1]])
+    }
+
+    var data2 = []
+    for (let i = 1; i < date.length; i++){
+      data1.push(this.state.XHistoryStats.timeline.deaths[date[i]]- this.state.XHistoryStats.timeline.deaths[date[i-1]])
+    }
+    var data3 = []
+    for (let i = 1; i < date.length; i++){
+      data1.push(this.state.XHistoryStats.timeline.recovered[date[i]]- this.state.XHistoryStats.timeline.recovered[date[i-1]])
+    }
+var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Cases",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
+            data: data1,
+          },
+          // {
+          //   label: "Deaths",
+          //   backgroundColor: "rgb(255, 99, 132)",
+          //   borderColor: "rgb(255, 99, 132)",
+          //   data: data2,
+          // },
+          // {
+          //   label: "Recovered",
+          //   backgroundColor: "rgb(75, 192, 192)",
+          //   borderColor: "rgb(75, 192, 192)",
+          //   data: data3,
+          // },
+        ],
+      },
+    options: {
+      aspectRatio: 1.5,
+      responsive: true,
+        legend: {
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Cases",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Time",
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}
+
+    var ctx = document.getElementById("canvasCountryDaily").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
+
+  countryHistoricalDailyDeathChart() {
+
+    var date = Object.keys(this.state.XHistoryStats.timeline.cases);
+    var data1 = []
+    for (let i = 0; i < date.length; i++){
+      data1.push(this.state.XHistoryStats.timeline.deaths[date[i]]- this.state.XHistoryStats.timeline.deaths[date[i-1]])
+    }
+
+var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Deaths",
+            backgroundColor: "rgb(255, 99, 132)",
+            borderColor: "rgb(255, 99, 132)",
+            data: data1,
+          },
+        ],
+      },
+    options: {
+      aspectRatio: 1.5,
+      responsive: true,
+        legend: {
+          display: false,
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Deaths",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: false,
+                labelString: "Time",
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}
+
+    var ctx = document.getElementById("canvasCountryDailyDeath").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
+
+
   countryHistoricalLogChart() {
     var date = Object.keys(this.state.XHistoryStats.timeline.cases);
     var data1 = Object.values(this.state.XHistoryStats.timeline.cases);
@@ -957,6 +1148,34 @@ class CountryPage extends React.Component {
 
     var colorNames = Object.keys(window.chartColors);
   }
+
+  handleTotalChange = (event, newValue) => {
+    this.setState({
+      totalTabValue: newValue,
+    });
+  }
+
+  handleChange = (event, newValue) => {
+    this.setState({
+      tabValue: newValue,
+    });
+  }
+
+  handleProvinceCasesChange = (event, newValue) => {
+    this.setState({
+      tabProvinceValue: newValue,
+    });
+  }
+
+  handleProvinceDeathsChange = (event, newValue) => {
+    this.setState({
+      tabProvinceDeathValue: newValue,
+    });
+  }
+
+
+
+  
   render() {
     return (
       <div className="container-fluid  text-center">
@@ -1176,14 +1395,63 @@ class CountryPage extends React.Component {
             <div className="col-xs-10 offset-xs-1 col-lg-6">
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
-                  <canvas id="canvasCountry"></canvas>
+
+                <Tabs value={this.state.totalTabValue} onChange={this.handleTotalChange} aria-label="basic tabs example">
+          <Tab label="Cases (Total)"  />
+          <Tab label="Cases (Log)"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.totalTabValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasCountry"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.totalTabValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasCountryLog"></canvas>
+
+    </div>
+
                 </CardContent>
               </Card>
             </div>
-            <div className="col-xs-10 offset-xs-1 col-lg-6">
+            <div className= 'col-xs-10 offset-xs-1 col-lg-6'>
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
-                  <canvas id="canvasCountryLog"></canvas>
+                <Tabs value={this.state.tabValue} onChange={this.handleChange} aria-label="basic tabs example">
+          <Tab label="Daily Cases"  />
+          <Tab label="Daily Deaths"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.tabValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasCountryDaily"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.tabValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasCountryDailyDeath"></canvas>
+
+    </div>
+
                 </CardContent>
               </Card>
             </div>
@@ -1198,30 +1466,63 @@ class CountryPage extends React.Component {
               <div className="col-xs-12 col-lg-6">
                 <Card style={{ marginBottom: "10px" }}>
                   <CardContent>
-                    <canvas id="canvasProvinceCases"></canvas>
+
+                  <Tabs value={this.state.tabProvinceValue} onChange={this.handleProvinceCasesChange} aria-label="basic tabs example">
+          <Tab label="Cases (total)"  />
+          <Tab label="Cases (log)"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.tabProvinceValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasProvinceCases"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.tabProvinceValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasProvinceCasesLog"></canvas>
+
+    </div>
+
                   </CardContent>
                 </Card>
               </div>
-              <div className="col-xs-12 col-lg-6">
-                <Card style={{ marginBottom: "10px" }}>
-                  <CardContent>
-                    <canvas id="canvasProvinceCasesLog"></canvas>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-            <div className="row">
               <div className="col-xs-10 offset-xs-1 col-lg-6">
                 <Card style={{ marginBottom: "10px" }}>
                   <CardContent>
-                    <canvas id="canvasProvinceDeaths"></canvas>
-                  </CardContent>
-                </Card>
-              </div>
-              <div className="col-xs-10 offset-xs-1 col-lg-6">
-                <Card style={{ marginBottom: "10px" }}>
-                  <CardContent>
-                    <canvas id="canvasProvinceDeathsLog"></canvas>
+                  <Tabs value={this.state.tabProvinceDeathValue} onChange={this.handleProvinceDeathsChange} aria-label="basic tabs example">
+          <Tab label="Cases (total)"  />
+          <Tab label="Cases (log)"  />
+        </Tabs>
+
+      <div
+      role="tabpanel"
+      hidden={this.state.tabProvinceDeathValue !== 0}
+      id={`simple-tabpanel-0`}
+      aria-labelledby={`simple-tab-0`}
+    >
+               <canvas id="canvasProvinceDeaths"></canvas>
+
+    </div>
+
+    <div
+      role="tabpanel"
+      hidden={this.state.tabProvinceDeathValue !== 1}
+      id={`simple-tabpanel-1`}
+      aria-labelledby={`simple-tab-1`}
+    >
+               <canvas id="canvasProvinceDeathsLog"></canvas>
+
+    </div>
+
                   </CardContent>
                 </Card>
               </div>
