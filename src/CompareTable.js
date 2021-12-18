@@ -111,12 +111,6 @@ var headCells = [
     align: "right",
     format: (value) => (value ? value.toLocaleString() : null),
   },
-  {
-    id: "percentVaccinated",
-    label: "Population Vaccinated (assuming double dose)",
-    align: "right",
-    format: (value) => (value ? value.toLocaleString(undefined,{style: 'percent', minimumFractionDigits:2}) : null),
-  },
 ];
 
 
@@ -295,8 +289,7 @@ export default function CompareTable({casesCountries, vaccineCountries}) {
       tests: casesCountries[i]["tests"],
       testsPerOneMillion: casesCountries[i]["testsPerOneMillion"],
       population: casesCountries[i]["population"],
-      vaccinesAdministered: vaccineNumber,
-      percentVaccinated: (vaccineNumber/casesCountries[i]["population"])/2
+      vaccinesAdministered: vaccineNumber
     });
   }
 
