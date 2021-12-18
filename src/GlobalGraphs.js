@@ -15,7 +15,6 @@ import Footer from "./Footer";
 import EnhancedTable from "./MUIGlobalTable";
 import { Tabs, Tab } from "@material-ui/core";
 
-
 let backGroundColorArray = [
   "rgb(255, 99, 132)",
   "rgb(255, 159, 64)",
@@ -267,13 +266,13 @@ class GlobalGraphs extends React.Component {
     this.worldVaccineChart = this.worldVaccineChart.bind(this);
     this.worldDailyChart = this.worldDailyChart.bind(this);
     this.worldDailyDeathChart = this.worldDailyDeathChart.bind(this);
+    this.worldVaccineDailyChart = this.worldVaccineDailyChart.bind(this);
 
     this.state = {
       tabValue: 0,
-      totalTabValue: 0,
+      tabValue2: 0,
     };
-
-}
+  }
 
   componentDidMount() {
     this.worldConfirmedChart();
@@ -281,84 +280,19 @@ class GlobalGraphs extends React.Component {
     this.worldDailyChart();
     this.worldDailyDeathChart();
     this.worldVaccineChart();
+    this.worldVaccineDailyChart();
   }
 
-  worldVaccinePie() {
-    let labelVaccine = ["Vaccinated", "Not Vaccinated"];
-    var vac = Object.values(this.props.vaccineGlobal);
-    let totalVaccinated = vac[vac.length - 1]/2;
-    let totalUnVaccinated = this.props.cases.population - totalVaccinated;
-    let arrayVaccinated = [totalVaccinated, totalUnVaccinated];
-    let percentVaccinated = (
-      totalVaccinated / this.props.cases.population
-    ).toLocaleString(undefined, { style: "percent", minimumFractionDigits: 2 });
 
-    return (
-      <Card style={{ marginBottom: "10px" }}>
-        <CardContent>
-          <Pie
-            data={{
-              labels: labelVaccine,
-              datasets: [
-                {
-                  label: "Vaccinated",
-                  backgroundColor: ["rgb(54, 162, 235)", "rgb(255, 99, 132)"],
-                  hoverBackgroundColor: [
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 99, 132)",
-                  ],
-                  data: arrayVaccinated,
-                },
-              ],
-            }}
-            options={{
-              title: {
-                display: true,
-                text: percentVaccinated + " of Global Population Vaccinated (assuming double dose)",
-                fontSize: 20,
-              },
-              legend: {
-                labels: {
-                  usePointStyle: true,
-                },
-                display: true,
-                position: "right",
-              },
-              tooltips: {
-                callbacks: {
-                  label: function (tooltipItem, data) {
-                    var dataLabel = data.labels[tooltipItem.index];
-                    var value =
-                      ": " +
-                      data.datasets[tooltipItem.datasetIndex].data[
-                        tooltipItem.index
-                      ].toLocaleString();
-
-                    if (Chart.helpers.isArray(dataLabel)) {
-                      dataLabel = dataLabel.slice();
-                      dataLabel[0] += value;
-                    } else {
-                      dataLabel += value;
-                    }
-                    return dataLabel;
-                  },
-                },
-              },
-            }}
-          />
-        </CardContent>
-      </Card>
-    );
-  }
 
   worldVaccinePie2() {
     var vaccineArray = [];
     let vacn;
     let vaccineNumber;
 
-    for (let i = 0; i < this.props.vaccineCountries.length; i++) {
+    for (let i = 0; i < this.props.vaccineCountries?.length; i++) {
       vacn = Object.values(this.props.vaccineCountries[i]["timeline"]);
-      vaccineNumber = vacn[vacn.length - 1];
+      vaccineNumber = vacn[vacn?.length - 1];
       if (vaccineNumber > 0) {
         vaccineArray[this.props.vaccineCountries[i].country] = vaccineNumber;
       }
@@ -530,7 +464,83 @@ class GlobalGraphs extends React.Component {
     var colorNames = Object.keys(window.chartColors);
   }
 
+  worldVaccineDailyChart() {
+    var date = Object.keys(this.props.vaccineGlobal);
+    var data1 = [];
+    for (let i = 0; i < date.length; i++){
+      data1.push(this.props.vaccineGlobal[date[i]]- this.props.vaccineGlobal[date[i-1]])
+    }
+    var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Vaccinations",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
+            data: data1,
+          },
+        ],
+      },
+    options: {
+      aspectRatio: 2,
+      responsive: true,
+        legend: {
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Vaccinations",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}
 
+    var ctx = document.getElementById("canvasVaccineDaily").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
+  }
 
   worldConfirmedChart() {
     var date = Object.keys(this.props.historyGlobal.cases);
@@ -778,15 +788,17 @@ class GlobalGraphs extends React.Component {
   }
 
   worldDailyChart() {
-
     var date = Object.keys(this.props.historyGlobal.cases);
-    var data1 = []
-    for (let i = 0; i < date.length; i++){
-      data1.push(this.props.historyGlobal.cases[date[i]]- this.props.historyGlobal.cases[date[i-1]])
+    var data1 = [];
+    for (let i = 0; i < date?.length; i++) {
+      data1.push(
+        this.props.historyGlobal.cases[date[i]] -
+          this.props.historyGlobal.cases[date[i - 1]]
+      );
     }
 
-var config ={
-    type: 'bar',
+    var config = {
+      type: "bar",
       data: {
         labels: date,
         datasets: [
@@ -798,9 +810,9 @@ var config ={
           },
         ],
       },
-    options: {
-      aspectRatio: 1.5,
-      responsive: true,
+      options: {
+        aspectRatio: 1.5,
+        responsive: true,
         legend: {
           display: false,
           position: "bottom",
@@ -811,8 +823,8 @@ var config ={
           text: "Daily Cases",
           fontSize: 20,
         },
-      scales: {
-            xAxes: [
+        scales: {
+          xAxes: [
             {
               gridLines: {
                 display: true,
@@ -826,31 +838,33 @@ var config ={
               },
             },
           ],
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                    min: 0,
-                    userCallback: function (value, index, values) {
-                      value = value.toString();
-                      value = value.split(/(?=(?:...)*$)/);
-                      value = value.join(",");
-                      return value;
-                    },
-                  },
-                  gridLines: {
-                    display: true,
-                    drawBorder: true,
-                    drawOnChartArea: false,
-                  },
-                  display: true,
-                  scaleLabel: {
-                    display: true,
-                    labelString: "Cases",
-                  },
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                userCallback: function (value, index, values) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(",");
+                  return value;
                 },
-              ],}
-    }}
+              },
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Cases",
+              },
+            },
+          ],
+        },
+      },
+    };
 
     var ctx = document.getElementById("canvasWorldDaily").getContext("2d");
     window.myLine = new Chart(ctx, config);
@@ -859,15 +873,17 @@ var config ={
   }
 
   worldDailyDeathChart() {
-
     var date = Object.keys(this.props.historyGlobal.cases);
-    var data1 = []
-    for (let i = 0; i < date.length; i++){
-      data1.push(this.props.historyGlobal.deaths[date[i]]- this.props.historyGlobal.deaths[date[i-1]])
+    var data1 = [];
+    for (let i = 0; i < date?.length; i++) {
+      data1.push(
+        this.props.historyGlobal.deaths[date[i]] -
+          this.props.historyGlobal.deaths[date[i - 1]]
+      );
     }
 
-var config ={
-    type: 'bar',
+    var config = {
+      type: "bar",
       data: {
         labels: date,
         datasets: [
@@ -879,9 +895,9 @@ var config ={
           },
         ],
       },
-    options: {
-      aspectRatio: 1.5,
-      responsive: true,
+      options: {
+        aspectRatio: 1.5,
+        responsive: true,
         legend: {
           display: false,
         },
@@ -891,8 +907,8 @@ var config ={
           text: "Daily Deaths",
           fontSize: 20,
         },
-      scales: {
-            xAxes: [
+        scales: {
+          xAxes: [
             {
               gridLines: {
                 display: true,
@@ -906,31 +922,33 @@ var config ={
               },
             },
           ],
-              yAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                    min: 0,
-                    userCallback: function (value, index, values) {
-                      value = value.toString();
-                      value = value.split(/(?=(?:...)*$)/);
-                      value = value.join(",");
-                      return value;
-                    },
-                  },
-                  gridLines: {
-                    display: true,
-                    drawBorder: true,
-                    drawOnChartArea: false,
-                  },
-                  display: true,
-                  scaleLabel: {
-                    display: true,
-                    labelString: "Cases",
-                  },
+          yAxes: [
+            {
+              ticks: {
+                beginAtZero: true,
+                min: 0,
+                userCallback: function (value, index, values) {
+                  value = value.toString();
+                  value = value.split(/(?=(?:...)*$)/);
+                  value = value.join(",");
+                  return value;
                 },
-              ],}
-    }}
+              },
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+                labelString: "Cases",
+              },
+            },
+          ],
+        },
+      },
+    };
 
     var ctx = document.getElementById("canvasWorldDailyDeath").getContext("2d");
     window.myLine = new Chart(ctx, config);
@@ -938,17 +956,17 @@ var config ={
     var colorNames = Object.keys(window.chartColors);
   }
 
-  handleTotalChange = (event, newValue) => {
-    this.setState({
-      totalTabValue: newValue,
-    });
-  }
-
   handleChange = (event, newValue) => {
     this.setState({
       tabValue: newValue,
     });
-  }
+  };
+
+  handleChange2 = (event, newValue) => {
+    this.setState({
+      tabValue2: newValue,
+    });
+  };
 
   render() {
     return (
@@ -964,68 +982,64 @@ var config ={
             <div className="col-xs-10 offset-xs-1 col-lg-6">
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
+                  <Tabs
+                    value={this.state.tabValue}
+                    onChange={this.handleChange}
+                  >
+                    <Tab label="Cases (total)" />
+                    <Tab label="Cases (log)" />
+                  </Tabs>
 
-                <Tabs value={this.state.totalTabValue} onChange={this.handleTotalChange} aria-label="basic tabs example">
-          <Tab label="Cases (total)"  />
-          <Tab label="Cases (log)"  />
-        </Tabs>
+                  <div
+                    hidden={this.state.tabValue !== 0}
+                  >
+                    <canvas id="canvasConfirmed"></canvas>
+                    <canvas id="canvasConfirmedLog"></canvas>
+                  </div>
 
-      <div
-      role="tabpanel"
-      hidden={this.state.totalTabValue !== 0}
-      id={`simple-tabpanel-0`}
-      aria-labelledby={`simple-tab-0`}
-    >
-               <canvas id="canvasConfirmed"></canvas>
+                  <div
+                    role="tabpanel"
+                    hidden={this.state.tabValue !== 1}
+                    aria-labelledby={`simple-tab-1`}
+                  >
 
-    </div>
-
-    <div
-      role="tabpanel"
-      hidden={this.state.totalTabValue !== 1}
-      id={`simple-tabpanel-1`}
-      aria-labelledby={`simple-tab-1`}
-    >
-               <canvas id="canvasConfirmedLog"></canvas>
-
-    </div>
-
+                  </div>
                 </CardContent>
               </Card>
             </div>
 
-            <div className= 'col-xs-10 offset-xs-1 col-lg-6'>
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+
               <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
-                <Tabs value={this.state.tabValue} onChange={this.handleChange} aria-label="basic tabs example">
-          <Tab label="Daily Cases"  />
-          <Tab label="Daily Deaths"  />
-        </Tabs>
+                  
+                  <Tabs
+                    value={this.state.tabValue2}
+                    onChange={this.handleChange2}
+                    aria-label="basic tabs example"
+                  >
+                    <Tab label="Daily Cases" />
+                    <Tab label="Daily Deaths" />
+                  </Tabs>
 
-      <div
-      role="tabpanel"
-      hidden={this.state.tabValue !== 0}
-      id={`simple-tabpanel-0`}
-      aria-labelledby={`simple-tab-0`}
-    >
-               <canvas id="canvasWorldDaily"></canvas>
+                  <div
+                    // hidden={this.state.tabValue2 !== 0}
+                    aria-labelledby={`simple-tab-0`}
+                  >
+                    <canvas id="canvasWorldDaily"></canvas>
+                    <canvas id="canvasWorldDailyDeath"></canvas>
+                  </div>
 
-    </div>
+                  <div
+                    role="tabpanel"
+                    // hidden={this.state.tabValue2 !== 1}
+                    aria-labelledby={`simple-tab-1`}
+                  >
 
-    <div
-      role="tabpanel"
-      hidden={this.state.tabValue !== 1}
-      id={`simple-tabpanel-1`}
-      aria-labelledby={`simple-tab-1`}
-    >
-               <canvas id="canvasWorldDailyDeath"></canvas>
-
-    </div>
-
+                  </div>
                 </CardContent>
               </Card>
             </div>
-            
           </div>
           <hr />
 
@@ -1041,21 +1055,26 @@ var config ={
           </h1>
           <hr />
           <div className="row">
-            <div className="col-xs-10 offset-xs-1 col-lg-6 offset-lg-3">
-              <Card style={{ marginBottom: "10px" }}>
+          <div className="col-xs-10 offset-xs-1 col-lg-6">
+            <Card style={{ marginBottom: "10px" }}>
                 <CardContent>
                   <canvas id="canvasVaccine"></canvas>
                 </CardContent>
               </Card>
             </div>
+            <div className="col-xs-10 offset-xs-1 col-lg-6">
+            <Card style={{ marginBottom: "10px" }}>
+                <CardContent>
+                  <canvas id="canvasVaccineDaily"></canvas>
+                </CardContent>
+              </Card>
+            </div>
           </div>
           <div className="row">
-            <div className="col-xs-10 offset-xs-1 col-md-6">
+            <div className="col-xs-10 offset-xs-1 col-md-6 offset-md-3">
               {this.worldVaccinePie2()}
             </div>
-            <div className="col-xs-10 offset-xs-1 col-md-6">
-              {this.worldVaccinePie()}
-            </div>
+
           </div>
           <hr />
 

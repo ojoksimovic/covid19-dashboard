@@ -270,6 +270,7 @@ let provinceCasesData = [];
 let provinceDeathsData = [];
 let date = [];
 let data1;
+let data1Daily = []
 
 // import colourThemeArray from "./ColourTheme"
 
@@ -287,6 +288,7 @@ class CountryPage extends React.Component {
     this.ProvinceHeader = this.ProvinceHeader.bind(this);
     this.countryHistoricalDailyDeathChart = this.countryHistoricalDailyDeathChart.bind(this);
     this.countryHistoricalDailyChart = this.countryHistoricalDailyChart.bind(this);
+    this.countryVaccineChartDaily = this.countryVaccineChartDaily.bind(this);
 
     this.state = {
       XVaccineStats: null,
@@ -329,6 +331,10 @@ class CountryPage extends React.Component {
       if (this.props.XVaccineCountries[i]["country"] == this.props.XCountry){
         date = Object.keys(this.props.XVaccineCountries[i]["timeline"]);
         data1 = Object.values(this.props.XVaccineCountries[i]["timeline"]);
+        for (let j = 0; j < date.length; j++){
+          data1Daily.push(this.props.XVaccineCountries[i]["timeline"][date[j]]- this.props.XVaccineCountries[i]["timeline"][date[j-1]])
+        }
+
         this.setState({
           VaccineInfo: "Available"
         });
@@ -336,6 +342,7 @@ class CountryPage extends React.Component {
       
             }
             this.countryVaccineChart();
+            this.countryVaccineChartDaily();
             
   }
 
@@ -446,6 +453,81 @@ class CountryPage extends React.Component {
 
     var colorNames = Object.keys(window.chartColors);
     }
+  }
+  countryVaccineChartDaily() {
+
+
+    if (this.state.VaccineInfo != null){ 
+var config ={
+    type: 'bar',
+      data: {
+        labels: date,
+        datasets: [
+          {
+            label: "Vaccinations",
+            backgroundColor: "rgb(54, 162, 235)",
+            borderColor: "rgb(54, 162, 235)",
+            data: data1Daily,
+          },
+        ],
+      },
+    options: {
+      aspectRatio: 1.5,
+      responsive: true,
+        legend: {
+          display: false,
+          position: "bottom",
+        },
+        responsive: true,
+        title: {
+          display: true,
+          text: "Daily Vaccinations",
+          fontSize: 20,
+        },
+      scales: {
+            xAxes: [
+            {
+              gridLines: {
+                display: true,
+                drawBorder: true,
+                drawOnChartArea: false,
+              },
+              display: true,
+              scaleLabel: {
+                display: true,
+              },
+            },
+          ],
+              yAxes: [
+                {
+                  ticks: {
+                    beginAtZero: true,
+                    min: 0,
+                    userCallback: function (value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(",");
+                      return value;
+                    },
+                  },
+                  gridLines: {
+                    display: true,
+                    drawBorder: true,
+                    drawOnChartArea: false,
+                  },
+                  display: true,
+                  scaleLabel: {
+                    display: true,
+                    labelString: "Cases",
+                  },
+                },
+              ],}
+    }}}
+
+    var ctx = document.getElementById("canvasVaccineDaily").getContext("2d");
+    window.myLine = new Chart(ctx, config);
+
+    var colorNames = Object.keys(window.chartColors);
   }
 
   capitalizeFirstLetter(mySentence) {
@@ -854,15 +936,7 @@ class CountryPage extends React.Component {
     for (let i = 0; i < date.length; i++){
       data1.push(this.state.XHistoryStats.timeline.cases[date[i]]- this.state.XHistoryStats.timeline.cases[date[i-1]])
     }
-
-    var data2 = []
-    for (let i = 1; i < date.length; i++){
-      data1.push(this.state.XHistoryStats.timeline.deaths[date[i]]- this.state.XHistoryStats.timeline.deaths[date[i-1]])
-    }
-    var data3 = []
-    for (let i = 1; i < date.length; i++){
-      data1.push(this.state.XHistoryStats.timeline.recovered[date[i]]- this.state.XHistoryStats.timeline.recovered[date[i-1]])
-    }
+    
 var config ={
     type: 'bar',
       data: {
@@ -874,18 +948,6 @@ var config ={
             borderColor: "rgb(54, 162, 235)",
             data: data1,
           },
-          // {
-          //   label: "Deaths",
-          //   backgroundColor: "rgb(255, 99, 132)",
-          //   borderColor: "rgb(255, 99, 132)",
-          //   data: data2,
-          // },
-          // {
-          //   label: "Recovered",
-          //   backgroundColor: "rgb(75, 192, 192)",
-          //   borderColor: "rgb(75, 192, 192)",
-          //   data: data3,
-          // },
         ],
       },
     options: {
@@ -912,7 +974,6 @@ var config ={
               display: true,
               scaleLabel: {
                 display: true,
-                labelString: "Time",
               },
             },
           ],
@@ -992,7 +1053,6 @@ var config ={
               display: true,
               scaleLabel: {
                 display: false,
-                labelString: "Time",
               },
             },
           ],
@@ -1547,11 +1607,13 @@ var config ={
             </Card>
           </div>
           
-            <CountryVaccinePie
-              XVaccineCountries={this.props.XVaccineCountries}
-              XStats={this.props.XStats}
-              XCountry = {this.props.XCountry}
-            />
+          <div className="col-xs-10 offset-xs-1 col-lg-6">
+            <Card style={{ marginBottom: "10px" }}>
+              <CardContent>
+                <canvas id="canvasVaccineDaily"></canvas>
+              </CardContent>
+            </Card>
+          </div>
             
         </div>
       </div> 
