@@ -12,6 +12,7 @@ import GlobalGraphs from './GlobalGraphs';
 import CountryPage from "./CountryPage";
 import SearchPage from "./SearchPage";
 import ComparePage from "./ComparePage";
+import axiosRetry from 'axios-retry';
 
 let countryRouter = [];
 
@@ -33,14 +34,31 @@ class DataFetch extends React.Component {
     }
 
     componentDidMount() {
+        // reverse proxy to account for missing cors header in disease.sh APIs
+        let root_url = 'https://cors.olivera.tech/'
+    
+        // above shared hosting server deliberately returns 503, retry method needed for axios below
+
+        axiosRetry(axios, {
+            retries: 10, // number of retries
+            retryDelay: (retryCount) => {
+                console.log(`retry attempt: ${retryCount}`);
+                return retryCount * 2000; // time interval between retries
+            },
+            retryCondition: (error) => {
+                // if retry condition is not specified, by default idempotent requests are retried
+                return error.response.status === 503;
+            },
+        });
+
         axios.all([
-            axios.get('https://disease.sh/v3/covid-19/all?yesterday=false'),
-            axios.get('https://disease.sh/v3/covid-19/historical/all?lastdays=all'),
-            axios.get('https://disease.sh/v3/covid-19/historical?lastdays=all'),
-            axios.get('https://disease.sh/v3/covid-19/continents?yesterday=false&twoDaysAgo=false&allowNull=true'),
-            axios.get('https://disease.sh/v3/covid-19/countries?yesterday=false&twoDaysAgo=false&sort=cases&allowNull=true'),
-            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=all'),
-            axios.get('https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all')
+            axios.get(root_url+'https://disease.sh/v3/covid-19/all?yesterday=false'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/historical/all?lastdays=all'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/historical?lastdays=all'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/continents?yesterday=false&twoDaysAgo=false&allowNull=true'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/countries?yesterday=false&twoDaysAgo=false&sort=cases&allowNull=true'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/vaccine/coverage?lastdays=all'),
+            axios.get(root_url+'https://disease.sh/v3/covid-19/vaccine/coverage/countries?lastdays=all')
         ])
             .then(axios.spread((req1, req2, req3, req4, req5, req6, req7) => {
                 this.setState({
