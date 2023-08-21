@@ -17,7 +17,7 @@ console.log(XVaccineCountries);
                 <div className="spinner-border" style={{ width: "3rem", height: "3rem" }} role="status">
                     <span className="visually-hidden"></span>
                 </div>
-                <h3 id="loading-text">Loading...</h3>
+                <h3 id="loading-text">Loading...this may take up to 60 seconds...</h3>
             </div>
         )
     }
