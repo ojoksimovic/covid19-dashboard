@@ -13,6 +13,7 @@ import CountryPage from "./CountryPage";
 import SearchPage from "./SearchPage";
 import ComparePage from "./ComparePage";
 import axiosRetry from "axios-retry";
+import NavBar from "./NavBar";
 
 let countryRouter = [];
 
@@ -35,7 +36,9 @@ class DataFetch extends React.Component {
 
   componentDidMount() {
     // reverse proxy to account for missing cors header in disease.sh APIs
-    let root_url = "https://cors.olivera.tech/";
+    let root_url = 
+    // "http://localhost:8080/";
+    "https://cors.olivera.tech/";
 
     // above shared hosting server deliberately returns 503, retry method needed for axios below
 
@@ -48,9 +51,10 @@ class DataFetch extends React.Component {
       retryCondition: (error) => {
         // if retry condition is not specified, by default idempotent requests are retried
         return error.response.status === 503;
-      },
+      }
     });
-
+    
+    if (!this.state.historyGlobal){
     axios
       .all([
         axios.get(
@@ -93,7 +97,7 @@ class DataFetch extends React.Component {
           });
         })
       );
-  }
+  }}
 
   capitalizeFirstLetter(mySentence) {
     const words = mySentence.split("%20");
@@ -184,7 +188,7 @@ class DataFetch extends React.Component {
           >
             <span className="visually-hidden"></span>
           </div>
-          <h3 id="loading-text">Connecting to John Hopkins University...</h3>
+          <h3 id="loading-text">Connecting to John Hopkins University database...</h3>
           <h5 id="loading-text">This may take up to 60 seconds</h5>{" "}
         </div>
       );
@@ -192,11 +196,14 @@ class DataFetch extends React.Component {
     return (
       <div>
         <Router>
+            <NavBar/>
           <Switch>
             <Route exact path="/">
               <Redirect to="/global" />
             </Route>
             <Route path="/country/:countryname" component={this.CountryName} />
+            <Route path="/compare" component={this.ComparePageList} />
+            <Route path="/search" component={this.CountryList} />
             <Route
               path="/global"
               render={() => (
@@ -211,8 +218,6 @@ class DataFetch extends React.Component {
                 />
               )}
             />
-            <Route path="/search" component={this.CountryList} />
-            <Route path="/compare" component={this.ComparePageList} />
           </Switch>
         </Router>
       </div>
