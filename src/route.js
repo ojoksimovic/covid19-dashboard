@@ -7,6 +7,7 @@ const ROUTE = {
   GLOBAL: "/global",
   COUNTRY: "/country/:countryname",
   CANADA: "/country/canada",
+  COUNTRY_BASE: "/country",
   SEARCH: "/search",
   COMPARE: "/compare",
 };

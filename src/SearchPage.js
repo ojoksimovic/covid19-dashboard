@@ -3,8 +3,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import Footer from './Footer';
+import ROUTE from "./route";
+
 
 
 const useStyles = makeStyles({
@@ -24,14 +26,14 @@ function countryLink(country){
   return countryLink
 }
 
-function handleChange (object, value) {
-console.log(value.name);
-window.location.pathname='/country/'+countryLink(value.name)
-}
-
 
 export default function CountrySelect({countryList, cases}) {
   const classes = useStyles();
+  const history = useHistory();
+
+  function handleChange (object, value) {
+    history.push(ROUTE.COUNTRY_BASE + '/'+ countryLink(value.name))
+    }
 
   return (
     <div className="container-fluid text-center">
