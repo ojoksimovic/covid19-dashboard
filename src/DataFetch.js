@@ -46,7 +46,7 @@ class DataFetch extends React.Component {
       retries: 10, // number of retries
       retryDelay: (retryCount) => {
         console.log(`retry attempt: ${retryCount}`);
-        return retryCount * 2000; // time interval between retries
+        return retryCount * 500; // time interval between retries
       },
       retryCondition: (error) => {
         // if retry condition is not specified, by default idempotent requests are retried
