@@ -48,10 +48,8 @@ class DataFetch extends React.Component {
         console.log(`retry attempt: ${retryCount}`);
         return retryCount * 500; // time interval between retries
       },
-      retryCondition: (error) => {
-        // if retry condition is not specified, by default idempotent requests are retried
-        return error.response.status === 503;
-      }
+        retryCondition: (_error) => true // retry no matter what
+
     });
     
     if (!this.state.historyGlobal){
@@ -96,7 +94,11 @@ class DataFetch extends React.Component {
             vaccineCountries: req7.data,
           });
         })
-      );
+      )
+      .catch((err) => {
+        if (err.response.status !== 200) {
+            throw new Error(`API call failed with status code: ${err.response.status} after 10 retry attempts`);
+        }})
   }}
 
   capitalizeFirstLetter(mySentence) {
