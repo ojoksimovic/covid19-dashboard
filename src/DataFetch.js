@@ -97,7 +97,7 @@ class DataFetch extends React.Component {
       )
       .catch((err) => {
         if (err.response.status !== 200) {
-            throw new Error(`API call failed with status code: ${err.response.status} after 10 retry attempts`);
+          window.location.reload(); //possibly blocked from disease.sh, reloading page should work
         }})
   }}
 
