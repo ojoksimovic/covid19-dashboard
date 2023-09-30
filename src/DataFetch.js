@@ -38,7 +38,8 @@ class DataFetch extends React.Component {
     // reverse proxy to account for missing cors header in disease.sh APIs
     let root_url = 
     // "http://localhost:8080/";
-    "https://cors.olivera.tech/";
+    // "https://cors.olivera.tech/";
+    "";
 
     // above shared hosting server deliberately returns 503, retry method needed for axios below
 
