@@ -472,7 +472,7 @@ var config ={
         ],
       },
     options: {
-      aspectRatio: 1.5,
+      aspectRatio: 2,
       responsive: true,
         legend: {
           display: false,
