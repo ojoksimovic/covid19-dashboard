@@ -1,8 +1,7 @@
-import "./index.css";
-import React from "react";
-import ReactDOM from "react-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Chart from "chart.js";
+import React from "react";
+import "./index.css";
 import "./utils";
 
 function CanadaGraph({historyConfirmed}) {

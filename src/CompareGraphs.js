@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Chart from "chart.js";
-import "./utils";
-import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Chart from "chart.js";
+import React, { useEffect } from "react";
+import "./utils";
 
 export default function CompareGraphs({ compareGraphsData }) {
     console.log(compareGraphsData);
