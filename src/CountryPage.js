@@ -1,17 +1,15 @@
-import "./index.css";
-import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Chart from "chart.js";
-import { Pie } from "react-chartjs-2";
-import "./utils";
-import { makeStyles } from "@material-ui/core/styles";
+import { Tab, Tabs } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { Tabs, Tab } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
-import CountryVaccinePie from "./CountryVaccinePie";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Chart from "chart.js";
+import React from "react";
 import Footer from "./Footer";
+import "./index.css";
+import "./utils";
 
 const useStyles = makeStyles({
   root: {

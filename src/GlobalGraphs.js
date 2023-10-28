@@ -1,19 +1,18 @@
-import "./index.css";
-import React from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Chart from "chart.js";
-import { Pie } from "react-chartjs-2";
-import "./utils";
-import MediaCard from "./GlobalCards";
+import { Tab, Tabs } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import ContinentCharts from "./ContinentCharts";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Chart from "chart.js";
+import React from "react";
+import { Pie } from "react-chartjs-2";
 import ContinentCards from "./ContinentCards";
-import GlobalTable from "./GlobalTable";
-import TopCountryCard from "./TopCountryCard";
+import ContinentCharts from "./ContinentCharts";
 import Footer from "./Footer";
+import MediaCard from "./GlobalCards";
 import EnhancedTable from "./MUIGlobalTable";
-import { Tabs, Tab } from "@material-ui/core";
+import TopCountryCard from "./TopCountryCard";
+import "./index.css";
+import "./utils";
 
 let backGroundColorArray = [
   "rgb(255, 99, 132)",

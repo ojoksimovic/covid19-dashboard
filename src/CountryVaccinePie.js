@@ -1,11 +1,11 @@
-import "./index.css";
-import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import Chart from "chart.js";
-import { Pie} from 'react-chartjs-2';
-import "./utils";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Chart from "chart.js";
+import React from "react";
+import { Pie } from 'react-chartjs-2';
+import "./index.css";
+import "./utils";
 
 
  function CountryVaccinePie({XVaccineCountries, XCountry, XStats}) {
