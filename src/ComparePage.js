@@ -100,7 +100,19 @@ function getComparisonData(value){
     <CompareTable 
     casesCountries = {compareTableData} vaccineCountries = {vaccineCountries}/>
     </div>
-    :null}
+    :
+    count>1?
+    <div class="text-center">
+    <div
+      className="spinner-border"
+      style={{ width: "3rem", height: "3rem", marginTop:"1rem" }}
+      role="status"
+    >
+      <span className="visually-hidden"></span>
+    </div>
+    <h3 id="loading-text">Connecting to John Hopkins University database...</h3>
+    <h5 id="loading-text">This may take up to 60 seconds</h5>{" "}
+  </div>:null}
     <Footer cases = {cases}/>
     </div>
   );
